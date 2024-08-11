@@ -1,0 +1,33 @@
+# Ignore node_modules folder
+node_modules
+node
+# Ignore temporary build files
+dist
+out-tsc
+
+
+# Ignore IDE specific files and folders
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore any logs
+npm-debug.log
+yarn-error.log
+lerna-debug.log
+.pnpm-debug.log
+
+# Ignore Angular cache files
+.angular
+
+# Ignore optional npm cache files
+package-lock.json
+yarn.lock
+.pnpm-lock.yaml

@@ -1,0 +1,67 @@
+<div class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0"
+      [ngClass]="{'parent-fade-in':!closingCart(), 'parent-fade-out':closingCart()}">
+      <div id="cartDiv" class="relative w-full max-w-4xl bg-slate-100 rounded-lg shadow-lg overflow-hidden max-h-full"
+            [ngClass]="{'fade-in':!closingCart(), 'fade-out':closingCart()}">
+            <fa-icon id="closeCart" [icon]="xMarkIcon"
+                  class="absolute top-0 right-2 z-50 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"
+                  (click)="closeCart()" />
+            <div
+                  class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 overflow-y-auto min-h-96 max-h-[calc(100vh-3rem)]">
+
+                  <!-- Cart Items Section -->
+                  <div class="w-full md:w-2/3 bg-slate-200 p-4  overflow-scroll relative">
+                        <h2 class="text-2xl font-semibold mb-4">Shopping Cart</h2>
+                        <ul>
+                              @for (item of cartStore.items(); track item.code) {
+                              <li
+                                    class="flex items-center justify-between mb-4 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+                                    <div class="flex items-center space-x-4">
+                                          <div>
+                                                <h3 class="text-lg font-semibold">{{item.name}}</h3>
+
+                                                <button class="text-red-500 text-sm hover:underline"
+                                                      (click)="removeItem(item.code)">Remove</button>
+                                          </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                          <button
+                                                class="text-sm font-bold bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300"
+                                                (click)="decreaseQuantity(item.code)"><fa-icon
+                                                      [icon]="minusIcon" /></button>
+                                          <span class="text-lg">{{item.quantity}}</span>
+                                          <button
+                                                class="text-sm font-bold bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300"
+                                                (click)="increaseQuantity(item.code)"><fa-icon
+                                                      [icon]="plusIcon" /></button>
+                                          <span class="text-lg">{{item.price * item.quantity| currency}}</span>
+                                    </div>
+                              </li>
+
+                              }
+                        </ul>
+
+                  </div>
+
+                  <!-- Order Summary Section -->
+                  <div class="w-full md:w-1/3 lg:pr-4 bg-slate-100 p-4 flex flex-col justify-between">
+                        <h2 class="text-2xl font-semibold mb-4">Order Summary</h2>
+                        <div class="mb-4 grow">
+                              <p class="flex justify-between">
+                                    <span>Items</span>
+                                    <span>{{cartStore.itemsCount()}}</span>
+                              </p>
+
+                        </div>
+
+                        <div class="border-t border-gray-300 pt-4 grow-0">
+                              <p class="flex justify-between text-lg font-semibold">
+                                    <span>Total Cost</span>
+                                    <span>{{cartStore.totalPrice()| currency}}</span>
+                              </p>
+                        </div>
+                        <button
+                              class="bg-aquamarine-dark text-night font-bold w-full py-3 mt-4 rounded-lg hover:bg-aquamarine transition">Checkout</button>
+                  </div>
+            </div>
+      </div>
+</div>

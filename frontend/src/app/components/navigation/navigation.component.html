@@ -1,0 +1,63 @@
+<nav id="navDiv"
+      class="px-4 py-2 flex justify-between items-center h-20 fixed z-10 w-full shadow-sm top-0 transition-all">
+      <a routerLink="/home" class="flex items-center">
+            <img src="logo.png" alt="Logo" class="w-14 h-14" srcset="">
+      </a>
+      <div class="flex md:hidden">
+            <button id="closeMenu" (click)="toggleMenu()"
+                  class="text-aquamarine-dark hover:text-night focus:outline-none transition-colors">
+                  @if(!isMenuOpen()){
+                  <fa-icon [icon]="menuIcon" class="text-2xl" />
+
+                  }@else {
+                  <fa-icon [icon]="xMarkIcon" class="text-2xl" />
+
+                  }
+            </button>
+      </div>
+      <ul class="hidden md:flex space-x-6">
+            <li class="relative">
+                  <button (click)="openCart()"
+                        class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
+                        <span>cart</span>
+                        <span
+                              class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
+                  </button>
+            </li>
+            <li>
+                  <a routerLink="/login"
+                        class="flex text-lg px-4 py-2 rounded font-semibold text-aquamarine-dark hover:bg-cyan-100 hover:text-night transition-colors">login</a>
+            </li>
+            <li>
+                  <a routerLink="/signup"
+                        class="flex text-lg font-semibold bg-aquamarine-dark text-night px-4 py-2 rounded-lg hover:bg-aquamarine-light transition-colors">signup</a>
+            </li>
+      </ul>
+
+      <div [ngClass]="{'h-48':isMenuOpen(), 'h-0': !isMenuOpen()}"
+            class="drop-down absolute top-20 left-0 w-full md:hidden shadow-sm overflow-hidden transition-all">
+            <ul class="flex flex-col space-y-4 px-4 pb-4">
+                  <li class="relative">
+                        <button (click)="openCart()"
+                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                              <span>cart</span>
+                              <span
+                                    class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
+                        </button>
+                  </li>
+                  <li>
+                        <a routerLink="/login"
+                              class="flex text-lg px-4 py-2 rounded font-semibold text-aquamarine-dark hover:bg-cyan-100 hover:text-night transition-colors w-full justify-between">login</a>
+                  </li>
+                  <li>
+                        <a routerLink="/signup"
+                              class="flex text-lg font-semibold bg-aquamarine-dark text-night px-4 py-2 rounded-lg hover:bg-aquamarine-light transition-colors w-full justify-between">signup</a>
+                  </li>
+            </ul>
+      </div>
+
+
+</nav>
+@if(showCart()){
+<app-cart (onClose)="closeCart()" />
+}

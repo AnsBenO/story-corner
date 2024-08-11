@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.notifications-container {
+  position: fixed;
+  bottom: 25px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification {
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.5s, fadeOut 0.5s 4.75s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.1;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+// @for $i from 1 through 9 {
+//   .notifications-container {
+//     // :nth-child(1-9)
+//     &:nth-child(#{$i}) {
+//       // Delay the animation. Delay increases as items loop.
+//       animation-delay: $i * (1s / 18);
+//     }
+//   }
+// }

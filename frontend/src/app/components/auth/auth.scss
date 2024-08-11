@@ -1,0 +1,19 @@
+.animate {
+  animation: slide 0.5s forwards;
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-50%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(-2.5%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}

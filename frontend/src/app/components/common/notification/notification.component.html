@@ -1,0 +1,11 @@
+@if(notifications() !== []){
+<div class="notifications-container">
+      @for(notification of notifications(); track notification.id ){
+
+      <div class="notification bg-aquamarine-light text-night">
+            {{ notification.message }}
+      </div>
+      }
+</div>
+
+}

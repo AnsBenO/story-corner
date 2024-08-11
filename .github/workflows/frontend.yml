@@ -1,0 +1,52 @@
+name: Angular Frontend
+
+on:
+    push:
+        paths:
+            - frontend/**
+        branches:
+            - "**"
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        name: Build and Deploy Angular Application
+        runs-on: ubuntu-latest
+        env:
+            working-directory: ./frontend
+            DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-frontend
+        defaults:
+            run:
+                working-directory: ${{ env.working-directory }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+
+            - name: Install dependencies
+              run: npm install
+
+            # todo: Angular tests
+            # - name: Run Angular tests
+            #   run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadless
+
+            - name: Build Angular app
+              run: npm run build
+
+            - if: ${{ github.ref == 'refs/heads/master' }}
+              name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - if: ${{ github.ref == 'refs/heads/master' }}
+              name: Build and Publish Docker Image
+              run: |
+                  docker build -t $DOCKER_IMAGE_NAME .
+                  echo "Pushing the image $DOCKER_IMAGE_NAME to Docker Hub..."
+                  docker push ${{secrets.DOCKERHUB_USERNAME}}/bookstore-frontend

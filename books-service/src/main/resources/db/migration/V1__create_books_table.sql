@@ -1,0 +1,13 @@
+CREATE SEQUENCE book_id_seq START WITH 1 INCREMENT BY 50;
+
+CREATE TABLE books (
+    id BIGINT NOT NULL DEFAULT nextval('book_id_seq'),    
+    code VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    image_url VARCHAR(255),
+    price DECIMAL(19, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);

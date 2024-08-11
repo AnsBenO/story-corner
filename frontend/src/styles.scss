@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.parent-fade-in {
+  animation: parentFadeIn 0.2s forwards;
+}
+
+.parent-fade-out {
+  animation: parentFadeOut 0.2s forwards;
+}
+
+@keyframes parentFadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.675);
+  }
+}
+
+@keyframes parentFadeOut {
+  from {
+    background-color: rgba(0, 0, 0, 0.675);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}

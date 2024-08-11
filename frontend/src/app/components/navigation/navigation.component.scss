@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+nav,
+nav .drop-down {
+  @apply bg-slate-50;
+}
