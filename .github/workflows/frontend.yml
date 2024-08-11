@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             working-directory: ./frontend
-            DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-frontend
+            DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/storycorner-frontend
         defaults:
             run:
                 working-directory: ${{ env.working-directory }}
@@ -49,4 +49,4 @@ jobs:
               run: |
                   docker build -t $DOCKER_IMAGE_NAME .
                   echo "Pushing the image $DOCKER_IMAGE_NAME to Docker Hub..."
-                  docker push ${{secrets.DOCKERHUB_USERNAME}}/bookstore-frontend
+                  docker push ${{secrets.DOCKERHUB_USERNAME}}/storycorner-frontend

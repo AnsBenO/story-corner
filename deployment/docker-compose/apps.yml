@@ -1,7 +1,7 @@
 name: "book-store-app"
 services:
     books-service:
-        image: ansbeno/bookstore-books-service
+        image: ansbeno/story-corner-service
         container_name: books-service
         environment:
             - SPRING_PROFILES_ACTIVE=docker
