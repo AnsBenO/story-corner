@@ -3,12 +3,15 @@ import { Item } from '../types/book-item.type';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+import { NewOrder } from '../types/new-order.type';
+import { NewOrderResponse } from '../types/new-order-response.type';
+
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
   http = inject(HttpClient);
-  constructor() {}
 
   loadItemsFromLocalStorage(): Observable<Item[]> {
     const itemsJson = localStorage.getItem('cartItems');
@@ -25,7 +28,7 @@ export class OrderService {
     return of(items);
   }
 
-  //   submitOrder() {
-  //     this.http.post('');
-  //   }
+  submitOrder(order: NewOrder) {
+    this.http.post<NewOrderResponse>(`${environment.API_URL}/orders`, order);
+  }
 }

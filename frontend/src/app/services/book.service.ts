@@ -10,8 +10,6 @@ export class BookService {
   http = inject(HttpClient);
 
   getAllBooks(page?: number) {
-    console.log('Current environment:', environment);
-
     return page
       ? this.http.get<BooksPage>(`${environment.API_URL}/books?page=${page}`)
       : this.http.get<BooksPage>(`${environment.API_URL}/books`);

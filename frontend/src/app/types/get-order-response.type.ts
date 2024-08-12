@@ -1,10 +1,13 @@
-// request body for POST new order
-
 import { Item } from './book-item.type';
 import { Customer, DeliveryAddress } from './customer.type';
 
-export interface OrderEntity {
+export interface OrderResponse {
+  orderNumber: string;
+  user: string;
+  items: Item[];
   customer: Customer;
   deliveryAddress: DeliveryAddress;
-  items: Item[];
+  status: string;
+  comments?: string | null;
+  createdAt: Date;
 }
