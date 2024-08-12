@@ -17,8 +17,8 @@ import com.ansbeno.books_service.dto.PagedResultDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 class BookServiceImpl implements BookService {
       private final BookRepository bookRepository;
       private final ApplicationProperties properties;
