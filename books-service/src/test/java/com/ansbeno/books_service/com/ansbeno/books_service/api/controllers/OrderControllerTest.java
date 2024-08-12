@@ -64,7 +64,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
         }
 
         @Test
-        void shouldReturnBadRequestWhenMandatoryDataIsMissing() { // Expected status code [400] but was [500]
+        void shouldReturnBadRequestWhenMandatoryDataIsMissing() {
             var payload = TestDataFactory.createOrderRequestWithInvalidDeliveryAddress();
             given().contentType(ContentType.JSON)
 
@@ -80,7 +80,6 @@ public class OrderControllerTest extends AbstractIntegrationTest {
     @Nested
     class GetOrdersTests {
         @Test
-        @Sql("/test-orders.sql")
         void shouldGetOrdersSuccessfully() {
             List<OrderSummary> orderSummaries = given().when()
                     .get("/api/orders")
@@ -94,6 +93,19 @@ public class OrderControllerTest extends AbstractIntegrationTest {
             assertThat(orderSummaries).hasSize(2);
 
         }
+
+        @Test
+        void shouldReturnNotFoundWhenOrderNumberNotExists() {
+            String number = "invalid_Order_code";
+            given().contentType(ContentType.JSON)
+                    .when()
+                    .get("/api/orders/{code}", number)
+                    .then()
+                    .statusCode(404)
+                    .body("status", is(404))
+                    .body("title", is("Order Not Found"))
+                    .body("detail", is("Order with Number " + number + " Not Found"));
+        }
     }
 
     @Nested
@@ -101,7 +113,6 @@ public class OrderControllerTest extends AbstractIntegrationTest {
         String orderNumber = "order-123";
 
         @Test
-        @Sql("/test-orders.sql")
         void shouldGetOrderSuccessfully() {
             given()
                     .when()

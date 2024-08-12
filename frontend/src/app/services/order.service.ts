@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Item } from '../types/book-item.type';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
+  http = inject(HttpClient);
   constructor() {}
 
   loadItemsFromLocalStorage(): Observable<Item[]> {
@@ -22,4 +24,8 @@ export class OrderService {
 
     return of(items);
   }
+
+  //   submitOrder() {
+  //     this.http.post('');
+  //   }
 }

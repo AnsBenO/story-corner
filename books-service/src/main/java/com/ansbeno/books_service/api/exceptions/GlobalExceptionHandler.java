@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.InvalidOrderException;
 import com.ansbeno.books_service.domain.exceptions.OrderNotFoundException;
 
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,10 +31,21 @@ class GlobalExceptionHandler {
       private static final String SERVICE_NAME = "books-service";
       private static final URI BAD_REQUEST_TYPE = URI.create("https://api.bookstore.com/errors/bad-request");
 
-      @ExceptionHandler(NotFoundException.class)
-      ProblemDetail handleNotFoundException(NotFoundException ex, WebRequest request) {
+      @ExceptionHandler(BookNotFoundException.class)
+      ProblemDetail handleNotFoundException(BookNotFoundException ex, WebRequest request) {
             ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-            problemDetail.setTitle("Resource Not Found");
+            problemDetail.setTitle("Book Not Found");
+            problemDetail.setType(NOT_FOUND_TYPE);
+            problemDetail.setProperty("service", SERVICE_NAME);
+            problemDetail.setProperty("error_category", "Generic");
+            problemDetail.setProperty("timestamp", Instant.now());
+            return problemDetail;
+      }
+
+      @ExceptionHandler(OrderNotFoundException.class)
+      ProblemDetail handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+            problemDetail.setTitle("Order Not Found");
             problemDetail.setType(NOT_FOUND_TYPE);
             problemDetail.setProperty("service", SERVICE_NAME);
             problemDetail.setProperty("error_category", "Generic");
@@ -54,21 +65,10 @@ class GlobalExceptionHandler {
             return problemDetail;
       }
 
-      @ExceptionHandler(OrderNotFoundException.class)
-      ProblemDetail handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-            problemDetail.setTitle("Order Not Found");
-            problemDetail.setType(NOT_FOUND_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Generic");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
-      }
-
       @ExceptionHandler(InvalidOrderException.class)
       ProblemDetail handleInvalidOrderException(InvalidOrderException ex) {
             ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-            problemDetail.setTitle("Invalid Order Request");
+            problemDetail.setTitle("Invalid OrderEntity Request");
             problemDetail.setType(BAD_REQUEST_TYPE);
             problemDetail.setProperty("service", SERVICE_NAME);
             problemDetail.setProperty("error_category", "Validation");

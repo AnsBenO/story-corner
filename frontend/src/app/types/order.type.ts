@@ -3,7 +3,7 @@
 import { Item } from './book-item.type';
 import { Customer, DeliveryAddress } from './customer.type';
 
-export interface Order {
+export interface OrderEntity {
   customer: Customer;
   deliveryAddress: DeliveryAddress;
   items: Item[];

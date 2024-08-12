@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.InvalidOrderException;
 import com.ansbeno.books_service.domain.exceptions.OrderNotFoundException;
 import com.ansbeno.books_service.domain.orderitem.OrderItem;
@@ -18,7 +19,6 @@ import com.ansbeno.books_service.dto.OrderDTO;
 import com.ansbeno.books_service.mappers.OrderItemMapper;
 import com.ansbeno.books_service.mappers.OrderMapper;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,12 +37,12 @@ public class OrderServiceImpl implements OrderService {
       public OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException {
             return orderRepository.findByUsernameAndOrderNumber(userName, orderNumber)
                         .map(OrderMapper::mapToOrderDTO)
-                        .orElseThrow(() -> new OrderNotFoundException(orderNumber));
+                        .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
       }
 
       @Override
       public void processNewOrders() {
-            List<Order> orders = orderRepository.findByStatus(OrderStatus.NEW);
+            List<OrderEntity> orders = orderRepository.findByStatus(OrderStatus.NEW);
             log.info("Found {} new orders to process", orders.size());
             orders.forEach(order -> {
                   try {
@@ -54,9 +54,9 @@ public class OrderServiceImpl implements OrderService {
             });
       }
 
-      private void process(Order order) {
+      private void process(OrderEntity order) {
             if (!canBeDelivered(order)) {
-                  log.warn("Order {} cannot be delivered to {}", order.getOrderNumber(),
+                  log.warn("OrderEntity {} cannot be delivered to {}", order.getOrderNumber(),
                               order.getDeliveryAddress().country());
                   orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
                   return;
@@ -64,19 +64,19 @@ public class OrderServiceImpl implements OrderService {
 
             log.info("Processing payment for order {}", order.getOrderNumber());
             orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
-            log.info("Order {} has been successfully processed", order.getOrderNumber());
+            log.info("OrderEntity {} has been successfully processed", order.getOrderNumber());
       }
 
       @Override
       public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request)
-                  throws InvalidOrderException, NotFoundException {
+                  throws InvalidOrderException, BookNotFoundException {
 
             if (!canBeDelivered(request.deliveryAddress().country())) {
                   throw new InvalidOrderException("Delivery not allowed to this country");
             }
             orderValidator.validate(request);
 
-            Order order = Order.builder()
+            OrderEntity order = OrderEntity.builder()
                         .orderNumber(generateOrderNumber())
                         .username(userName)
                         .status(OrderStatus.NEW)
@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             return UUID.randomUUID().toString();
       }
 
-      private boolean canBeDelivered(Order order) {
+      private boolean canBeDelivered(OrderEntity order) {
             return DELIVERY_ALLOWED_COUNTRIES.contains(
                         order.getDeliveryAddress().country().toUpperCase());
       }

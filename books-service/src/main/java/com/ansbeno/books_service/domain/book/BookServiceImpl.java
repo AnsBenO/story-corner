@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ansbeno.books_service.ApplicationProperties;
+import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.dto.BookDto;
 import com.ansbeno.books_service.dto.PagedResultDto;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -51,27 +51,17 @@ class BookServiceImpl implements BookService {
       }
 
       @Override
-      public BookDto findById(long id) throws NotFoundException {
-            Optional<BookEntity> foundBook = bookRepository.findById(id);
-            if (foundBook.isPresent()) {
-                  BookEntity book = foundBook.get();
-                  return BookMapper.mapToBookDto(book);
-            }
-            throw new NotFoundException("Resource Not Found");
-      }
-
-      @Override
-      public BookDto findByCode(String code) throws NotFoundException {
+      public BookDto findByCode(String code) throws BookNotFoundException {
             Optional<BookEntity> foundBook = bookRepository.findByCode(code);
             if (foundBook.isPresent()) {
                   BookEntity book = foundBook.get();
                   return BookMapper.mapToBookDto(book);
             }
-            throw new NotFoundException("Resource Not Found");
+            throw BookNotFoundException.forBookCode(code);
       }
 
       @Override
-      public void update(BookDto bookDto) throws NotFoundException {
+      public void update(BookDto bookDto) throws BookNotFoundException {
             BookEntity book = BookMapper.mapToBookEntity(bookDto);
             bookRepository.save(book);
       }

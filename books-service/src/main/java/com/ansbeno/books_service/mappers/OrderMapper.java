@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.ansbeno.books_service.domain.order.Order;
+import com.ansbeno.books_service.domain.order.OrderEntity;
 import com.ansbeno.books_service.domain.order.OrderStatus;
 import com.ansbeno.books_service.domain.orderitem.OrderItem;
 import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
@@ -14,8 +14,8 @@ public class OrderMapper {
       OrderMapper() {
       }
 
-      public static Order mapRequestToEntity(CreateOrderRequestDTO request) {
-            Order newOrder = Order.builder()
+      public static OrderEntity mapRequestToEntity(CreateOrderRequestDTO request) {
+            OrderEntity newOrder = OrderEntity.builder()
                         .orderNumber(UUID.randomUUID().toString())
                         .status(OrderStatus.NEW)
                         .customer(request.customer())
@@ -32,7 +32,7 @@ public class OrderMapper {
             return newOrder;
       }
 
-      public static OrderDTO mapToOrderDTO(Order order) {
+      public static OrderDTO mapToOrderDTO(OrderEntity order) {
             return OrderDTO.builder()
                         .orderNumber(order.getOrderNumber())
                         .user(order.getUsername())

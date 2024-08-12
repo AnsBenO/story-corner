@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ansbeno.books_service.domain.book.BookService;
+import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.dto.BookDto;
 import com.ansbeno.books_service.dto.PagedResultDto;
 
 import jakarta.validation.Valid;
-import javassist.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,24 +43,16 @@ class BookController {
       }
 
       @GetMapping("/{code}")
-      ResponseEntity<BookDto> getBookByCode(@PathVariable String code) throws NotFoundException {
+      ResponseEntity<BookDto> getBookByCode(@PathVariable String code) throws BookNotFoundException {
             BookDto book = bookService.findByCode(code);
             log.info("Get book: {}", code);
             return new ResponseEntity<>(book, HttpStatus.OK);
 
       }
 
-      @GetMapping("/id/{id}")
-      ResponseEntity<BookDto> getBookById(@PathVariable Long id) throws NotFoundException {
-            BookDto book = bookService.findById(id);
-            log.info("Get book by id: {}", id);
-            return new ResponseEntity<>(book, HttpStatus.OK);
-
-      }
-
       @PutMapping("/{code}")
       ResponseEntity<BookDto> updateBook(@PathVariable String code, @Valid @RequestBody BookDto bookDto)
-                  throws NotFoundException {
+                  throws BookNotFoundException {
             bookService.update(bookDto);
             log.info("Update book: {}", code);
             return new ResponseEntity<>(bookDto, HttpStatus.OK);

@@ -5,12 +5,12 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.ansbeno.books_service.domain.book.BookService;
+import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.InvalidOrderException;
 import com.ansbeno.books_service.dto.BookDto;
 import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
 import com.ansbeno.books_service.dto.OrderItemDTO;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 class OrderValidator {
       private final BookService bookService;
 
-      void validate(CreateOrderRequestDTO request) throws InvalidOrderException, NotFoundException {
+      void validate(CreateOrderRequestDTO request) throws InvalidOrderException, BookNotFoundException {
             Set<OrderItemDTO> items = request.items();
             for (OrderItemDTO item : items) {
                   BookDto book = bookService.findByCode(item.code());

@@ -2,7 +2,7 @@ package com.ansbeno.books_service.domain.orderitem;
 
 import java.math.BigDecimal;
 
-import com.ansbeno.books_service.domain.order.Order;
+import com.ansbeno.books_service.domain.order.OrderEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,5 +47,5 @@ public class OrderItem {
 
       @ManyToOne(optional = false)
       @JoinColumn(name = "order_id")
-      private Order order;
+      private OrderEntity order;
 }

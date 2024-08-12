@@ -35,7 +35,7 @@ class BookControllerTest extends AbstractIntegrationTest {
       }
 
       @Test
-      void shouldGetProductByCode() {
+      void shouldGetBookByCode() {
             BookDto book = given().contentType(ContentType.JSON)
                         .when()
                         .get("/api/books/{code}", "P100")
@@ -63,7 +63,7 @@ class BookControllerTest extends AbstractIntegrationTest {
                         .then()
                         .statusCode(404)
                         .body("status", is(404))
-                        .body("title", is("Resource Not Found"))
-                        .body("detail", is("Resource Not Found"));
+                        .body("title", is("Book Not Found"))
+                        .body("detail", is("Book with Number " + code + " Not Found"));
       }
 }

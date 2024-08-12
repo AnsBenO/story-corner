@@ -13,9 +13,7 @@ export class BookService {
     console.log('Current environment:', environment);
 
     return page
-      ? this.http.get<BooksPage>(
-          `${environment.BOOKS_API_URL}/books?page=${page}`
-        )
-      : this.http.get<BooksPage>(`${environment.BOOKS_API_URL}/books`);
+      ? this.http.get<BooksPage>(`${environment.API_URL}/books?page=${page}`)
+      : this.http.get<BooksPage>(`${environment.API_URL}/books`);
   }
 }
