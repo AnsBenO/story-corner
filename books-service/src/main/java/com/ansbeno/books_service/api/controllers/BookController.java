@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/books")
 @Slf4j
 class BookController {
+
       private final BookService bookService;
 
       @GetMapping
