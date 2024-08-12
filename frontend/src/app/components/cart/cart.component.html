@@ -16,11 +16,13 @@
                               <li
                                     class="flex items-center justify-between mb-4 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
                                     <div class="flex items-center space-x-4">
-                                          <div>
+                                          <div class="">
                                                 <h3 class="text-lg font-semibold">{{item.name}}</h3>
 
-                                                <button class="text-red-500 text-sm hover:underline"
-                                                      (click)="removeItem(item.code)">Remove</button>
+                                                <button class=" text-red-500 text-sm hover:underline"
+                                                      (click)="removeItem(item.code)">
+                                                      remove
+                                                </button>
                                           </div>
                                     </div>
                                     <div class="flex items-center space-x-4">

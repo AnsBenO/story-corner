@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 class OrderValidator {
       private final BookService bookService;
 
-      void validate(CreateOrderRequestDTO request) throws NotFoundException {
+      void validate(CreateOrderRequestDTO request) throws InvalidOrderException, NotFoundException {
             Set<OrderItemDTO> items = request.items();
             for (OrderItemDTO item : items) {
                   BookDto book = bookService.findByCode(item.code());

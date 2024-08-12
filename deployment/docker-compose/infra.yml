@@ -6,7 +6,7 @@ services:
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
-            - POSTGRES_DB=postgres
+            - POSTGRES_DB=books_db
         ports:
             - "15432:5432"
         healthcheck:

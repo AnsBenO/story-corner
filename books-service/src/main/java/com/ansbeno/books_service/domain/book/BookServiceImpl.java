@@ -57,7 +57,7 @@ class BookServiceImpl implements BookService {
                   BookEntity book = foundBook.get();
                   return BookMapper.mapToBookDto(book);
             }
-            throw new NotFoundException("Book Not Found");
+            throw new NotFoundException("Resource Not Found");
       }
 
       @Override
@@ -67,7 +67,7 @@ class BookServiceImpl implements BookService {
                   BookEntity book = foundBook.get();
                   return BookMapper.mapToBookDto(book);
             }
-            throw new NotFoundException("Book Not Found");
+            throw new NotFoundException("Resource Not Found");
       }
 
       @Override

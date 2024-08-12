@@ -2,9 +2,9 @@ package com.ansbeno.books_service.domain.order;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,26 +35,23 @@ public class OrderServiceImpl implements OrderService {
 
       @Override
       public OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException {
-            Optional<Order> orderOptional = orderRepository.findByUsernameAndOrderNumber(userName, orderNumber);
-            if (orderOptional.isPresent()) {
-                  Order order = orderOptional.get();
-                  return OrderMapper.mapToOrderDTO(order);
-            }
-            throw new OrderNotFoundException(orderNumber);
+            return orderRepository.findByUsernameAndOrderNumber(userName, orderNumber)
+                        .map(OrderMapper::mapToOrderDTO)
+                        .orElseThrow(() -> new OrderNotFoundException(orderNumber));
       }
 
       @Override
       public void processNewOrders() {
             List<Order> orders = orderRepository.findByStatus(OrderStatus.NEW);
             log.info("Found {} new orders to process", orders.size());
-            for (Order order : orders) {
+            orders.forEach(order -> {
                   try {
-                        this.process(order);
+                        process(order);
                   } catch (Exception e) {
-                        log.error("Failed to process order {}: {}", order.getOrderNumber(), e.getMessage());
+                        log.error("Failed to process order {}: {}", order.getOrderNumber(), e.getMessage(), e);
                         orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
                   }
-            }
+            });
       }
 
       private void process(Order order) {
@@ -66,38 +63,25 @@ public class OrderServiceImpl implements OrderService {
             }
 
             log.info("Processing payment for order {}", order.getOrderNumber());
-            orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.NEW);
-
-            log.info("Order {} has been successfully processed", order.getOrderNumber());
             orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
-      }
-
-      private boolean canBeDelivered(Order order) {
-            return DELIVERY_ALLOWED_COUNTRIES.contains(
-                        order.getDeliveryAddress().country().toUpperCase());
+            log.info("Order {} has been successfully processed", order.getOrderNumber());
       }
 
       @Override
-      public List<OrderSummary> findOrders(String username) {
-            return orderRepository.findByUsername(username);
-      }
+      public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request)
+                  throws InvalidOrderException, NotFoundException {
 
-      @Override
-      public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request) {
-
-            try {
-                  orderValidator.validate(request);
-            } catch (NotFoundException | InvalidOrderException e) {
-                  log.error("Order validation failed for user {}: {}", userName, e.getMessage());
-                  throw new InvalidOrderException(e.getMessage());
+            if (!canBeDelivered(request.deliveryAddress().country())) {
+                  throw new InvalidOrderException("Delivery not allowed to this country");
             }
+            orderValidator.validate(request);
 
             Order order = Order.builder()
                         .orderNumber(generateOrderNumber())
                         .username(userName)
                         .status(OrderStatus.NEW)
                         .deliveryAddress(request.deliveryAddress())
-                        .customer(new Customer(userName, userName, userName))
+                        .customer(request.customer())
                         .createdAt(LocalDateTime.now())
                         .build();
 
@@ -113,7 +97,22 @@ public class OrderServiceImpl implements OrderService {
             return new CreateOrderResponseDTO(order.getOrderNumber());
       }
 
-      private String generateOrderNumber() {
-            return "ORD-" + System.currentTimeMillis();
+      private boolean canBeDelivered(String country) {
+            return DELIVERY_ALLOWED_COUNTRIES.contains(country.toUpperCase());
       }
+
+      private String generateOrderNumber() {
+            return UUID.randomUUID().toString();
+      }
+
+      private boolean canBeDelivered(Order order) {
+            return DELIVERY_ALLOWED_COUNTRIES.contains(
+                        order.getDeliveryAddress().country().toUpperCase());
+      }
+
+      @Override
+      public List<OrderSummary> findOrders(String username) {
+            return orderRepository.findByUsername(username);
+      }
+
 }

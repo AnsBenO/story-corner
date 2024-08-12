@@ -63,7 +63,7 @@ class BookControllerTest extends AbstractIntegrationTest {
                         .then()
                         .statusCode(404)
                         .body("status", is(404))
-                        .body("title", is("Book Not Found"))
-                        .body("detail", is("Book Not Found"));
+                        .body("title", is("Resource Not Found"))
+                        .body("detail", is("Resource Not Found"));
       }
 }

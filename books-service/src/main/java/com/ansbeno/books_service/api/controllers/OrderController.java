@@ -13,6 +13,7 @@ import com.ansbeno.books_service.dto.OrderDTO;
 import com.ansbeno.books_service.security.SecurityService;
 
 import jakarta.validation.Valid;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,13 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/orders")
 @Slf4j
-class OrderController {
+public class OrderController {
       private final SecurityService securityService;
       private final OrderService orderService;
 
       @PostMapping
       @ResponseStatus(HttpStatus.CREATED)
-      CreateOrderResponseDTO createNewOrder(@Valid @RequestBody CreateOrderRequestDTO request) {
+      CreateOrderResponseDTO createNewOrder(@Valid @RequestBody CreateOrderRequestDTO request)
+                  throws NotFoundException {
             String username = securityService.getLoginUsername();
             log.info("Creating Order for User {}", username);
             return orderService.createNewOrder(username, request);

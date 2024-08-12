@@ -7,9 +7,11 @@ import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
 import com.ansbeno.books_service.dto.CreateOrderResponseDTO;
 import com.ansbeno.books_service.dto.OrderDTO;
 
+import javassist.NotFoundException;
+
 public interface OrderService {
 
-      CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request);
+      CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request) throws NotFoundException;
 
       List<OrderSummary> findOrders(String userName);
 
