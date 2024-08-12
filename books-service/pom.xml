@@ -29,7 +29,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
-		<dockerImageName>ansbeno/bookstore-${project.artifactId}</dockerImageName>
+		<dockerImageName>ansbeno/storycorner-${project.artifactId}</dockerImageName>
 	</properties>
 	<dependencies>
 
@@ -45,15 +45,6 @@
 			<version>5.0.1</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- 
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.30.2-GA</version>
-			<type>jar</type>
-		</dependency> -->
-
 
 		<dependency>
 			<groupId>io.rest-assured</groupId>

@@ -8,7 +8,6 @@ on:
             - "**"
     pull_request:
         branches: [main]
-
 jobs:
     build:
         name: Build
@@ -43,17 +42,8 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
 
             - if: ${{ github.ref == 'refs/heads/main' }}
-              name: Build Docker Image with Tag
+              name: Build and Publish Docker Image
               run: |
-                  ./mvnw spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=$DOCKER_IMAGE_NAME:latest
-                  echo "Built Docker image $DOCKER_IMAGE_NAME:latest"
-
-            - if: ${{ github.ref == 'refs/heads/main' }}
-              name: List Docker Images (Debugging Step)
-              run: docker images
-
-            - if: ${{ github.ref == 'refs/heads/main' }}
-              name: Push the Docker Image to Docker Hub
-              run: |
-                  echo "Pushing the image $DOCKER_IMAGE_NAME:latest to Docker Hub..."
-                  docker push $DOCKER_IMAGE_NAME:latest
+                  ./mvnw spring-boot:build-image -DskipTests
+                  echo "Pushing the image $DOCKER_IMAGE_NAME to Docker Hub..."
+                  docker push ${{secrets.DOCKERHUB_USERNAME}}/storycorner-books-service
