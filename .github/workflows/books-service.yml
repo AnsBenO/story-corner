@@ -44,6 +44,6 @@ jobs:
             - if: ${{ github.ref == 'refs/heads/main' }}
               name: Build and Publish Docker Image
               run: |
-                  ./mvnw spring-boot:build-image -DskipTests
+                  ./mvnw spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=$DOCKER_IMAGE_NAME:latest
                   echo "Pushing the image $DOCKER_IMAGE_NAME to Docker Hub..."
                   docker push ${{secrets.DOCKERHUB_USERNAME}}/storycorner-books-service

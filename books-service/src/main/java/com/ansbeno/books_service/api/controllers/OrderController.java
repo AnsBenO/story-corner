@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/api/orders")
-@Slf4j
 public class OrderController {
       private final SecurityService securityService;
       private final OrderService orderService;
