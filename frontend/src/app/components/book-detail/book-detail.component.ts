@@ -14,7 +14,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Book } from '../../types/book.type';
 import { CartStore } from '../../store/cart.store';
-import { Item } from '../../types/book-item.type';
+import { BookCartItem } from '../../types/book-cart-item.type';
 
 @Component({
   selector: 'app-book-detail',
@@ -40,7 +40,7 @@ export class BookDetailComponent {
   }
 
   addToCart(book: Book) {
-    const updatedItem: Item = {
+    const updatedItem: BookCartItem = {
       code: book.code,
       name: book.name,
       price: book.price,

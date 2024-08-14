@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
 
       private void process(OrderEntity order) {
             if (!canBeDelivered(order)) {
-                  log.warn("OrderEntity {} cannot be delivered to {}", order.getOrderNumber(),
+                  log.warn("Order {} cannot be delivered to {}", order.getOrderNumber(),
                               order.getDeliveryAddress().country());
                   orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
                   return;
@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
 
             log.info("Processing payment for order {}", order.getOrderNumber());
             orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
-            log.info("OrderEntity {} has been successfully processed", order.getOrderNumber());
+            log.info("Order {} has been successfully processed", order.getOrderNumber());
       }
 
       @Override

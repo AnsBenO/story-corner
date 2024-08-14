@@ -1,10 +1,10 @@
-import { Item } from './book-item.type';
+import { BookCartItem } from './book-cart-item.type';
 import { Customer, DeliveryAddress } from './customer.type';
 
 export interface OrderResponse {
   orderNumber: string;
   user: string;
-  items: Item[];
+  items: BookCartItem[];
   customer: Customer;
   deliveryAddress: DeliveryAddress;
   status: string;

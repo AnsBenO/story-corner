@@ -37,7 +37,7 @@ public class OrderController {
       CreateOrderResponseDTO createNewOrder(@Valid @RequestBody CreateOrderRequestDTO request)
                   throws BookNotFoundException {
             String username = securityService.getLoginUsername();
-            log.info("Creating OrderEntity for User {}", username);
+            log.info("Creating Order for User {}", username);
             return orderService.createNewOrder(username, request);
       }
 

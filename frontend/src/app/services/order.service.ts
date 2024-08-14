@@ -1,21 +1,26 @@
 import { inject, Injectable } from '@angular/core';
-import { Item } from '../types/book-item.type';
-import { Observable, of } from 'rxjs';
+import { BookCartItem } from '../types/book-cart-item.type';
+import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { NewOrder } from '../types/new-order.type';
 import { NewOrderResponse } from '../types/new-order-response.type';
+import {
+  NotificationStore,
+  NotificationType,
+} from '../store/notification.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
   http = inject(HttpClient);
+  notificationStore = inject(NotificationStore);
 
-  loadItemsFromLocalStorage(): Observable<Item[]> {
+  loadItemsFromLocalStorage(): Observable<BookCartItem[]> {
     const itemsJson = localStorage.getItem('cartItems');
-    let items: Item[] = [];
+    let items: BookCartItem[] = [];
 
     if (itemsJson) {
       try {
@@ -29,6 +34,13 @@ export class OrderService {
   }
 
   submitOrder(order: NewOrder) {
-    this.http.post<NewOrderResponse>(`${environment.API_URL}/orders`, order);
+    return this.http
+      .post<NewOrderResponse>(`${environment.API_URL}/orders`, order)
+      .pipe(
+        tap((response) => {
+          const message = `Order submitted successfully! Your order number is ${response.orderNumber}.`;
+          this.notificationStore.notify(message, NotificationType.SUCCESS);
+        })
+      );
   }
 }

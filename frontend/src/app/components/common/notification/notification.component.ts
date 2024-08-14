@@ -10,15 +10,24 @@ import {
 } from '@angular/core';
 import {
   NotificationStore,
+  NotificationType,
   TNotification,
 } from '../../../store/notification.store';
 
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  faCircleCheck,
+  faCircleXmark,
+  faInfo,
+  faInfoCircle,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +38,31 @@ export class NotificationComponent implements OnInit {
   notification$ = toObservable(this.notificationStore.notification);
   message: WritableSignal<string | null> = signal(null);
   notifications: WritableSignal<TNotification[]> = signal([]);
+  infoIcon = faInfoCircle;
+  circleXmarkIcon = faCircleXmark;
+  circleCheckIcon = faCircleCheck;
   private nextId = 0;
+
+  notificationClassMap = new Map<string, string>([
+    ['ERROR', 'bg-red-300 text-red-800'],
+    ['INFO', 'bg-aquamarine-light text-night-dark'],
+    ['SUCCESS', 'bg-green-300 text-green-800'],
+  ]);
+
+  getNotificationClass(type: NotificationType | null): string {
+    return this.notificationClassMap.get(type ?? '') ?? '';
+  }
+
+  getIcon(type: NotificationType): IconDefinition {
+    switch (type) {
+      case NotificationType.ERROR:
+        return this.circleXmarkIcon;
+      case NotificationType.INFO:
+        return this.infoIcon;
+      case NotificationType.SUCCESS:
+        return this.circleCheckIcon;
+    }
+  }
   ngOnInit() {
     this.notification$
       .pipe(takeUntilDestroyed(this.destroy))

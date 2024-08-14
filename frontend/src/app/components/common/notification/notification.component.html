@@ -1,10 +1,12 @@
 @if(notifications() !== []){
-<div class="notifications-container">
+<div class="notifications-container ">
       @for(notification of notifications(); track notification.id ){
+      @if(notification.message && notification.type){
 
-      <div class="notification bg-aquamarine-light text-night">
-            {{ notification.message }}
+      <div class="notification" [ngClass]="getNotificationClass(notification.type)">
+            <fa-icon class="text-2xl" [icon]="getIcon(notification.type)" />{{ notification.message }}
       </div>
+      }
       }
 </div>
 

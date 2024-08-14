@@ -26,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 class GlobalExceptionHandler {
-      private static final URI NOT_FOUND_TYPE = URI.create("https://api.bookstore.com/errors/not-found");
-      private static final URI ISE_FOUND_TYPE = URI.create("https://api.bookstore.com/errors/server-error");
+      private static final URI NOT_FOUND_TYPE = URI.create("https://api.story-corner.com/errors/not-found");
+      private static final URI ISE_FOUND_TYPE = URI.create("https://api.story-corner.com/errors/server-error");
       private static final String SERVICE_NAME = "books-service";
-      private static final URI BAD_REQUEST_TYPE = URI.create("https://api.bookstore.com/errors/bad-request");
+      private static final URI BAD_REQUEST_TYPE = URI.create("https://api.story-corner.com/errors/bad-request");
 
       @ExceptionHandler(BookNotFoundException.class)
       ProblemDetail handleNotFoundException(BookNotFoundException ex, WebRequest request) {
@@ -56,7 +56,7 @@ class GlobalExceptionHandler {
       @ExceptionHandler(Exception.class)
       ProblemDetail handleUnhandledException(Exception e) {
             ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                        e.getMessage());
+                        "Something Bad Happened");
             problemDetail.setTitle("Internal Server Error");
             problemDetail.setType(ISE_FOUND_TYPE);
             problemDetail.setProperty("service", SERVICE_NAME);
@@ -68,7 +68,7 @@ class GlobalExceptionHandler {
       @ExceptionHandler(InvalidOrderException.class)
       ProblemDetail handleInvalidOrderException(InvalidOrderException ex) {
             ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-            problemDetail.setTitle("Invalid OrderEntity Request");
+            problemDetail.setTitle("Invalid Order Request");
             problemDetail.setType(BAD_REQUEST_TYPE);
             problemDetail.setProperty("service", SERVICE_NAME);
             problemDetail.setProperty("error_category", "Validation");

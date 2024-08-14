@@ -18,10 +18,18 @@
       <ul class="hidden md:flex space-x-6">
             <li class="relative">
                   <button (click)="openCart()"
-                        class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
-                        <span>cart</span>
+                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
+                        <fa-icon class="text-xl" [icon]="cartIcon" />
                         <span
-                              class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
+                              class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">{{cartStore.itemsCount()}}</span>
+                  </button>
+            </li>
+            <li class="relative">
+                  <button
+                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
+                        <fa-icon class="text-xl" [icon]="bellIcon" />
+                        <span
+                              class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">0</span>
                   </button>
             </li>
             <li>
@@ -34,7 +42,7 @@
             </li>
       </ul>
 
-      <div [ngClass]="{'h-48':isMenuOpen(), 'h-0': !isMenuOpen()}"
+      <div [ngClass]="{'h-60':isMenuOpen(), 'h-0': !isMenuOpen()}"
             class="drop-down absolute top-20 left-0 w-full md:hidden shadow-sm overflow-hidden transition-all">
             <ul class="flex flex-col space-y-4 px-4 pb-4">
                   <li class="relative">
@@ -43,6 +51,14 @@
                               <span>cart</span>
                               <span
                                     class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
+                        </button>
+                  </li>
+                  <li class="relative">
+                        <button
+                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                              <span>notifications</span>
+                              <span
+                                    class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">0</span>
                         </button>
                   </li>
                   <li>

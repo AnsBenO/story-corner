@@ -8,14 +8,14 @@ export type TNotification = {
   message: string | null;
   type: NotificationType | null;
 };
+export enum NotificationType {
+  ERROR = 'ERROR',
+  INFO = 'INFO',
+  SUCCESS = 'SUCCESS',
+}
 const initialState: TNotificationState = {
   notification: { message: null, type: null },
 };
-
-export enum NotificationType {
-  ERROR,
-  INFO,
-}
 
 export const NotificationStore = signalStore(
   { providedIn: 'root' },
@@ -24,6 +24,7 @@ export const NotificationStore = signalStore(
     notify(message: string, type: NotificationType) {
       const notification = { message, type };
       patchState(store, { notification });
+      console.log('notifications: ', store.notification());
     },
   }))
 );

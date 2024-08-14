@@ -56,11 +56,11 @@ class OrderControllerUnitTest {
 
       static Stream<Arguments> createOrderRequestProvider() {
             return Stream.of(
-                        arguments(named("OrderEntity with Invalid Customer",
+                        arguments(named("Order with Invalid Customer",
                                     TestDataFactory.createOrderRequestWithInvalidCustomer())),
-                        arguments(named("OrderEntity with Invalid Delivery Address",
+                        arguments(named("Order with Invalid Delivery Address",
                                     TestDataFactory.createOrderRequestWithInvalidDeliveryAddress())),
-                        arguments(named("OrderEntity with No Items", TestDataFactory.createOrderRequestWithNoItems())));
+                        arguments(named("Order with No Items", TestDataFactory.createOrderRequestWithNoItems())));
       }
 
 }

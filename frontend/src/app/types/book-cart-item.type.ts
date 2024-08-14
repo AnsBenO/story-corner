@@ -1,4 +1,4 @@
-export interface Item {
+export interface BookCartItem {
   code: string;
   name: string;
   price: number;

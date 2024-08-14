@@ -15,7 +15,7 @@ import { patchState, signalState } from '@ngrx/signals';
 import { Book } from '../../types/book.type';
 import { BookDetailComponent } from '../book-detail/book-detail.component';
 import { CartStore } from '../../store/cart.store';
-import { Item } from '../../types/book-item.type';
+import { BookCartItem } from '../../types/book-cart-item.type';
 
 @Component({
   selector: 'app-home',
@@ -53,7 +53,6 @@ export class HomeComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (pageData) => this.updatePageState(pageData),
-        error: (error) => console.error('Error fetching books:', error),
       });
   }
 
@@ -80,7 +79,7 @@ export class HomeComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    const updatedItem: Item = {
+    const updatedItem: BookCartItem = {
       code: book.code,
       name: book.name,
       price: book.price,

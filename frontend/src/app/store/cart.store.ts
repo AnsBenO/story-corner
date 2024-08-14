@@ -7,14 +7,14 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Item } from '../types/book-item.type';
+import { BookCartItem } from '../types/book-cart-item.type';
 import { computed, inject } from '@angular/core';
 import { pipe, switchMap, tap } from 'rxjs';
 import { OrderService } from '../services/order.service';
 import { NotificationStore, NotificationType } from './notification.store';
 
 type TCartState = {
-  items: Item[];
+  items: BookCartItem[];
 };
 
 const initialState: TCartState = {
@@ -36,7 +36,7 @@ export const CartStore = signalStore(
       orderService = inject(OrderService),
       notificationStore = inject(NotificationStore)
     ) => ({
-      addItem(newItem: Item) {
+      addItem(newItem: BookCartItem) {
         const currentItems = store.items();
         const existingItemIndex = currentItems.findIndex(
           (item) => item.code === newItem.code

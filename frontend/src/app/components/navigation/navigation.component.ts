@@ -10,7 +10,12 @@ import {
 import { RouterModule } from '@angular/router';
 import { CartStore } from '../../store/cart.store';
 import { CartComponent } from '../cart/cart.component';
-import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBars,
+  faBell,
+  faCartShopping,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -28,6 +33,8 @@ export class NavigationComponent {
   isMenuOpen: WritableSignal<boolean> = signal(false);
   menuIcon = faBars;
   xMarkIcon = faXmark;
+  cartIcon = faCartShopping;
+  bellIcon = faBell;
 
   toggleMenu() {
     this.isMenuOpen.set(!this.isMenuOpen());
