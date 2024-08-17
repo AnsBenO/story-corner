@@ -12,6 +12,7 @@ import { computed, inject } from '@angular/core';
 import { pipe, switchMap, tap } from 'rxjs';
 import { OrderService } from '../services/order.service';
 import { NotificationStore, NotificationType } from './notification.store';
+import { Router } from '@angular/router';
 
 type TCartState = {
   items: BookCartItem[];
@@ -34,7 +35,8 @@ export const CartStore = signalStore(
     (
       store,
       orderService = inject(OrderService),
-      notificationStore = inject(NotificationStore)
+      notificationStore = inject(NotificationStore),
+      router = inject(Router)
     ) => ({
       addItem(newItem: BookCartItem) {
         const currentItems = store.items();
@@ -86,7 +88,11 @@ export const CartStore = signalStore(
         patchState(store, { items: updatedItems });
         localStorage.setItem('cartItems', JSON.stringify(updatedItems));
       },
-
+      checkout() {
+        setTimeout(() => {
+          router.navigate(['/checkout']);
+        }, 500);
+      },
       loadItems: rxMethod<void>(
         pipe(
           switchMap(() => {

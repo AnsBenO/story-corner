@@ -18,8 +18,8 @@ INSERT INTO orders (
                         status,
                         comments
                   ) VALUES
-(1, 'order-123', 'user', 'user', 'user@gmail.com', '11111111', '123 Main St', 'Apt 1', 'Dallas', 'TX', '75001', 'USA', 'NEW', null),
-(2, 'order-456', 'user', 'Prasad', 'prasad@gmail.com', '2222222', '123 Main St', 'Apt 1', 'Hyderabad', 'TS', '500072', 'India', 'NEW', null)
+(1, 'order-123', 'testuser', 'testuser', 'testuser@gmail.com', '11111111', '123 Main St', 'Apt 1', 'Dallas', 'TX', '75001', 'USA', 'NEW', null),
+(2, 'order-456', 'testuser', 'Prasad', 'prasad@gmail.com', '2222222', '123 Main St', 'Apt 1', 'Hyderabad', 'TS', '500072', 'India', 'NEW', null)
 ;
 
 INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
@@ -27,3 +27,9 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 (1, 'P101', 'To Kill a Mockingbird', 45.40, 1),
 (2, 'P102', 'The Chronicles of Narnia', 44.50, 1)
 ;
+-- Clear out any existing test data to avoid conflicts
+DELETE FROM users WHERE username = 'testuser';
+
+-- Now proceed with the insert
+INSERT INTO users (username, password, role)
+VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'CUSTOMER');

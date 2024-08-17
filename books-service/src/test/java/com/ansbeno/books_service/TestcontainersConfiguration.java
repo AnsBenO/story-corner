@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@TestConfiguration(proxyBeanMethods = false)
+@TestConfiguration(proxyBeanMethods = true)
 class TestcontainersConfiguration {
 
 	@Bean
@@ -14,5 +14,4 @@ class TestcontainersConfiguration {
 	PostgreSQLContainer<?> postgresContainer() {
 		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"));
 	}
-
 }

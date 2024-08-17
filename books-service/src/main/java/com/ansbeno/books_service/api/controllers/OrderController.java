@@ -1,6 +1,12 @@
 package com.ansbeno.books_service.api.controllers;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +43,11 @@ public class OrderController {
       CreateOrderResponseDTO createNewOrder(@Valid @RequestBody CreateOrderRequestDTO request)
                   throws BookNotFoundException {
             String username = securityService.getLoginUsername();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            log.info("Authentication Authorities: {}", authorities.stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(", ")));
             log.info("Creating Order for User {}", username);
             return orderService.createNewOrder(username, request);
       }

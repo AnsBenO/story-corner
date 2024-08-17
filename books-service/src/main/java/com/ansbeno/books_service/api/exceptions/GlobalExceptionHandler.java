@@ -6,10 +6,14 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.ansbeno.books_service.security.exceptions.UserRegistrationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,6 +34,7 @@ class GlobalExceptionHandler {
       private static final URI ISE_FOUND_TYPE = URI.create("https://api.story-corner.com/errors/server-error");
       private static final String SERVICE_NAME = "books-service";
       private static final URI BAD_REQUEST_TYPE = URI.create("https://api.story-corner.com/errors/bad-request");
+      private static final URI FORBIDDEN_TYPE = URI.create("https://api.story-corner.com/errors/access-denied");
 
       @ExceptionHandler(BookNotFoundException.class)
       ProblemDetail handleNotFoundException(BookNotFoundException ex, WebRequest request) {
@@ -76,8 +81,44 @@ class GlobalExceptionHandler {
             return problemDetail;
       }
 
+      @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+      @ResponseStatus(HttpStatus.FORBIDDEN)
+      public ProblemDetail handleInvalidCredentials(Exception ex) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+            problemDetail.setTitle("Access Denied");
+            problemDetail.setType(FORBIDDEN_TYPE);
+            problemDetail.setProperty("service", SERVICE_NAME);
+            problemDetail.setProperty("error_category", "Authentication");
+            problemDetail.setProperty("timestamp", Instant.now());
+            return problemDetail;
+      }
+
+      @ExceptionHandler(UserRegistrationException.class)
       @ResponseStatus(HttpStatus.BAD_REQUEST)
-      @ExceptionHandler(MethodArgumentNotValidException.class)
+      public ProblemDetail handleUserRegistrationException(UserRegistrationException ex) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+            problemDetail.setTitle("User Registration Error");
+            problemDetail.setType(BAD_REQUEST_TYPE);
+            problemDetail.setProperty("service", SERVICE_NAME);
+            problemDetail.setProperty("error_category", "Registration");
+            problemDetail.setProperty("timestamp", Instant.now());
+            return problemDetail;
+      }
+
+      @ExceptionHandler(HttpMessageNotReadableException.class)
+      @ResponseStatus(HttpStatus.BAD_REQUEST)
+      public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Malformed JSON request");
+            problemDetail.setTitle("Invalid Request Body");
+            problemDetail.setType(BAD_REQUEST_TYPE);
+            problemDetail.setProperty("service", SERVICE_NAME);
+            problemDetail.setProperty("error_category", "Request");
+            problemDetail.setProperty("timestamp", Instant.now());
+            return problemDetail;
+      }
+
+      @ResponseStatus(HttpStatus.BAD_REQUEST)
+      @ExceptionHandler({MethodArgumentNotValidException.class})
       public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
             Map<String, String> errors = new HashMap<>();
             ex.getBindingResult().getAllErrors().forEach((error) -> {

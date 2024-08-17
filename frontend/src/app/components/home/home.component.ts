@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
     hasPrevious: false,
   });
 
-  showModal: WritableSignal<boolean> = signal(false);
+  showBookDetailModal: WritableSignal<boolean> = signal(false);
   selectedBook: Book | null = null;
 
   ngOnInit(): void {
@@ -63,11 +63,11 @@ export class HomeComponent implements OnInit {
 
   openModal(book: Book) {
     this.selectedBook = book;
-    this.showModal.set(true);
+    this.showBookDetailModal.set(true);
   }
 
   closeModal() {
-    this.showModal.set(false);
+    this.showBookDetailModal.set(false);
     this.selectedBook = null;
   }
 
