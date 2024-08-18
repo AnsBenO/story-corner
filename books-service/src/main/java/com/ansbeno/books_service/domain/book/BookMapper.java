@@ -1,6 +1,6 @@
 package com.ansbeno.books_service.domain.book;
 
-import com.ansbeno.books_service.dto.BookDto;
+import com.ansbeno.books_service.domain.dto.BookDto;
 
 class BookMapper {
       private BookMapper() {

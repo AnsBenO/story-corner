@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.order.OrderService;
 import com.ansbeno.books_service.domain.order.OrderSummary;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.CreateOrderResponseDTO;
-import com.ansbeno.books_service.dto.OrderDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderResponseDTO;
+import com.ansbeno.books_service.domain.dto.OrderDTO;
 import com.ansbeno.books_service.security.SecurityService;
 
 import jakarta.validation.Valid;

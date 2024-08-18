@@ -9,8 +9,8 @@ import java.util.Set;
 
 import com.ansbeno.books_service.domain.order.Address;
 import com.ansbeno.books_service.domain.order.Customer;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.OrderItemDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.OrderItemDTO;
 
 public class TestDataFactory {
       static final List<String> VALID_COUNTIES = List.of("India", "Germany");

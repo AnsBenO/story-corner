@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ansbeno.books_service.ApplicationProperties;
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
-import com.ansbeno.books_service.dto.BookDto;
-import com.ansbeno.books_service.dto.PagedResultDto;
+import com.ansbeno.books_service.domain.dto.BookDto;
+import com.ansbeno.books_service.domain.dto.PagedResultDto;
 
 import lombok.RequiredArgsConstructor;
 

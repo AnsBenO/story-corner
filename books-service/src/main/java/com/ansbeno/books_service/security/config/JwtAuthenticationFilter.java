@@ -2,6 +2,7 @@ package com.ansbeno.books_service.security.config;
 
 import java.io.IOException;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,18 +36,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String jwt = authHeader.split(" ")[1];
+            try {
+                  String username = jwtService.extractUsername(jwt);
 
-            String username = jwtService.extractUsername(jwt);
+                  UserDetails user = userDetailsService.loadUserByUsername(username);
 
-            UserDetails user = userDetailsService.loadUserByUsername(username);
+                  UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null,
+                          user.getAuthorities());
 
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null,
-                        user.getAuthorities());
+                  SecurityContextHolder.getContext().setAuthentication(token);
+                  filterChain.doFilter(request, response);
+            } catch (ExpiredJwtException ex) {
+                  final String expiredMsg = ex.getMessage();
+                  logger.warn(expiredMsg);
 
-            SecurityContextHolder.getContext().setAuthentication(token);
-
-            filterChain.doFilter(request, response);
-
+                  final String msg = (expiredMsg != null) ? expiredMsg : "JWT token has expired";
+                  response.sendError(HttpServletResponse.SC_UNAUTHORIZED, msg);
+            }
       }
-
 }
+
+

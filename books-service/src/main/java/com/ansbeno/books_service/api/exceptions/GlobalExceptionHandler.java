@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import com.ansbeno.books_service.security.exceptions.UserRegistrationException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
@@ -34,91 +36,74 @@ class GlobalExceptionHandler {
       private static final URI ISE_FOUND_TYPE = URI.create("https://api.story-corner.com/errors/server-error");
       private static final String SERVICE_NAME = "books-service";
       private static final URI BAD_REQUEST_TYPE = URI.create("https://api.story-corner.com/errors/bad-request");
-      private static final URI FORBIDDEN_TYPE = URI.create("https://api.story-corner.com/errors/access-denied");
+      private static final URI UNAUTHORIZED_TYPE = URI.create("https://api.story-corner.com/errors/unauthorized");
+
+      @ExceptionHandler(ExpiredJwtException.class)
+      @ResponseStatus(HttpStatus.UNAUTHORIZED)
+      public ProblemDetail handleExpiredJwtException(ExpiredJwtException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            String message = "JWT expired " + ex.getClaims().getExpiration().toInstant().toEpochMilli() + " milliseconds ago at " + ex.getClaims().getExpiration() + ". Current time: " + Instant.now() + ". Allowed clock skew: 0 milliseconds.";
+            return createErrorResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", message, UNAUTHORIZED_TYPE, path);
+      }
 
       @ExceptionHandler(BookNotFoundException.class)
-      ProblemDetail handleNotFoundException(BookNotFoundException ex, WebRequest request) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-            problemDetail.setTitle("Book Not Found");
-            problemDetail.setType(NOT_FOUND_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Generic");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
+      public ProblemDetail handleNotFoundException(BookNotFoundException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.NOT_FOUND, "Book Not Found", ex.getMessage(), NOT_FOUND_TYPE, path);
       }
 
       @ExceptionHandler(OrderNotFoundException.class)
-      ProblemDetail handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-            problemDetail.setTitle("Order Not Found");
-            problemDetail.setType(NOT_FOUND_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Generic");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
-      }
-
-      @ExceptionHandler(Exception.class)
-      ProblemDetail handleUnhandledException(Exception e) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Something Bad Happened");
-            problemDetail.setTitle("Internal Server Error");
-            problemDetail.setType(ISE_FOUND_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Generic");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
+      public ProblemDetail handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.NOT_FOUND, "Order Not Found", ex.getMessage(), NOT_FOUND_TYPE, path);
       }
 
       @ExceptionHandler(InvalidOrderException.class)
-      ProblemDetail handleInvalidOrderException(InvalidOrderException ex) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-            problemDetail.setTitle("Invalid Order Request");
-            problemDetail.setType(BAD_REQUEST_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Validation");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
+      public ProblemDetail handleInvalidOrderException(InvalidOrderException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Order Request", ex.getMessage(), BAD_REQUEST_TYPE, path);
       }
 
-      @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
-      @ResponseStatus(HttpStatus.FORBIDDEN)
-      public ProblemDetail handleInvalidCredentials(Exception ex) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-            problemDetail.setTitle("Access Denied");
-            problemDetail.setType(FORBIDDEN_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Authentication");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
+      @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
+      @ResponseStatus(HttpStatus.UNAUTHORIZED)
+      public ProblemDetail handleInvalidCredentials(Exception ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.UNAUTHORIZED, "Access Denied", ex.getMessage(), UNAUTHORIZED_TYPE, path);
       }
 
       @ExceptionHandler(UserRegistrationException.class)
       @ResponseStatus(HttpStatus.BAD_REQUEST)
-      public ProblemDetail handleUserRegistrationException(UserRegistrationException ex) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-            problemDetail.setTitle("User Registration Error");
-            problemDetail.setType(BAD_REQUEST_TYPE);
-            problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Registration");
-            problemDetail.setProperty("timestamp", Instant.now());
-            return problemDetail;
+      public ProblemDetail handleUserRegistrationException(UserRegistrationException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.BAD_REQUEST, "User Registration Error", ex.getMessage(), BAD_REQUEST_TYPE, path);
       }
 
       @ExceptionHandler(HttpMessageNotReadableException.class)
       @ResponseStatus(HttpStatus.BAD_REQUEST)
-      public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Malformed JSON request");
-            problemDetail.setTitle("Invalid Request Body");
-            problemDetail.setType(BAD_REQUEST_TYPE);
+      public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Request Body", "Malformed JSON request", BAD_REQUEST_TYPE, path);
+      }
+
+      @ExceptionHandler(Exception.class)
+      public ProblemDetail handleUnhandledException(Exception e, WebRequest request) {
+            String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+            return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "Something Bad Happened", ISE_FOUND_TYPE, path);
+      }
+
+      private ProblemDetail createErrorResponse(HttpStatus status, String title, String message, URI type, String path) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, message);
+            problemDetail.setTitle(title);
+            problemDetail.setType(type);
             problemDetail.setProperty("service", SERVICE_NAME);
-            problemDetail.setProperty("error_category", "Request");
+            problemDetail.setProperty("error_category", "Generic");
             problemDetail.setProperty("timestamp", Instant.now());
+            problemDetail.setProperty("path", path);
             return problemDetail;
       }
 
       @ResponseStatus(HttpStatus.BAD_REQUEST)
-      @ExceptionHandler({MethodArgumentNotValidException.class})
+      @ExceptionHandler({ MethodArgumentNotValidException.class })
       public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
             Map<String, String> errors = new HashMap<>();
             ex.getBindingResult().getAllErrors().forEach((error) -> {

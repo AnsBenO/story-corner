@@ -1,4 +1,4 @@
-package com.ansbeno.books_service.mappers;
+package com.ansbeno.books_service.domain.mappers;
 
 import java.util.Set;
 import java.util.UUID;
@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import com.ansbeno.books_service.domain.order.OrderEntity;
 import com.ansbeno.books_service.domain.order.OrderStatus;
 import com.ansbeno.books_service.domain.orderitem.OrderItem;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.OrderDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.OrderDTO;
 
 public class OrderMapper {
       OrderMapper() {

@@ -13,11 +13,11 @@ import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.InvalidOrderException;
 import com.ansbeno.books_service.domain.exceptions.OrderNotFoundException;
 import com.ansbeno.books_service.domain.orderitem.OrderItem;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.CreateOrderResponseDTO;
-import com.ansbeno.books_service.dto.OrderDTO;
-import com.ansbeno.books_service.mappers.OrderItemMapper;
-import com.ansbeno.books_service.mappers.OrderMapper;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderResponseDTO;
+import com.ansbeno.books_service.domain.dto.OrderDTO;
+import com.ansbeno.books_service.domain.mappers.OrderItemMapper;
+import com.ansbeno.books_service.domain.mappers.OrderMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

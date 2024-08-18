@@ -52,7 +52,9 @@ public class AuthenticationService {
             }
             UserEntity user = UserEntity.builder()
                         .username(request.username())
+                        .email(request.email())
                         .password(encoder.encode(request.password()))
+                        .country(request.country())
                         .role(Role.CUSTOMER)
                         .build();
             userRepository.save(user);

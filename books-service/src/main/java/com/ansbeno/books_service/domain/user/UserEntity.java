@@ -1,5 +1,10 @@
 package com.ansbeno.books_service.domain.user;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,8 +36,22 @@ public class UserEntity {
       @Column(unique = true)
       private String username;
 
+      @Column(unique = true)
+      private String email;
+
       private String password;
+
+      @Column(unique = true)
+      private String country;
 
       @Enumerated(EnumType.STRING)
       private Role role;
+
+      @CreationTimestamp
+      @Column(nullable = false)
+      private LocalDateTime createdAt;
+
+      @UpdateTimestamp
+      @Column(nullable = false)
+      private LocalDateTime updatedAt;
 }

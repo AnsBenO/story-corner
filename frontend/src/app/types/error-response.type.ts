@@ -1,9 +1,7 @@
 export interface ErrorResponse {
+  timestamp: Date;
   status: number;
-  title: string;
-  detail: string;
-  type: string; // URI string
-  service: string;
-  error_category: string;
-  timestamp: string; // ISO 8601 date string
+  error: string;
+  message: string;
+  path: string;
 }

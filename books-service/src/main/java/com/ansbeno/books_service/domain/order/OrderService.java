@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.OrderNotFoundException;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.CreateOrderResponseDTO;
-import com.ansbeno.books_service.dto.OrderDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.CreateOrderResponseDTO;
+import com.ansbeno.books_service.domain.dto.OrderDTO;
 
 public interface OrderService {
 

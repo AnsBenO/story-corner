@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import com.ansbeno.books_service.domain.book.BookService;
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
 import com.ansbeno.books_service.domain.exceptions.InvalidOrderException;
-import com.ansbeno.books_service.dto.BookDto;
-import com.ansbeno.books_service.dto.CreateOrderRequestDTO;
-import com.ansbeno.books_service.dto.OrderItemDTO;
+import com.ansbeno.books_service.domain.dto.BookDto;
+import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+import com.ansbeno.books_service.domain.dto.OrderItemDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

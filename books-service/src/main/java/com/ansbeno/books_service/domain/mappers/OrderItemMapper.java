@@ -1,8 +1,8 @@
-package com.ansbeno.books_service.mappers;
+package com.ansbeno.books_service.domain.mappers;
 
 import com.ansbeno.books_service.domain.order.OrderEntity;
 import com.ansbeno.books_service.domain.orderitem.OrderItem;
-import com.ansbeno.books_service.dto.OrderItemDTO;
+import com.ansbeno.books_service.domain.dto.OrderItemDTO;
 
 public class OrderItemMapper {
 

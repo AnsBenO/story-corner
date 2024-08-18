@@ -1,4 +1,4 @@
-package com.ansbeno.books_service.dto;
+package com.ansbeno.books_service.domain.dto;
 
 public record CreateOrderResponseDTO(String orderNumber) {
 

@@ -31,5 +31,5 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 DELETE FROM users WHERE username = 'testuser';
 
 -- Now proceed with the insert
-INSERT INTO users (username, password, role)
-VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'CUSTOMER');
+INSERT INTO users (username, password, email, role, country)
+VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'testuser@test.com', 'CUSTOMER', 'USA');

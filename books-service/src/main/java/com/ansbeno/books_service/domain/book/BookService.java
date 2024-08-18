@@ -1,8 +1,8 @@
 package com.ansbeno.books_service.domain.book;
 
 import com.ansbeno.books_service.domain.exceptions.BookNotFoundException;
-import com.ansbeno.books_service.dto.BookDto;
-import com.ansbeno.books_service.dto.PagedResultDto;
+import com.ansbeno.books_service.domain.dto.BookDto;
+import com.ansbeno.books_service.domain.dto.PagedResultDto;
 
 public interface BookService {
 
