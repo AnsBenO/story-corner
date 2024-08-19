@@ -39,6 +39,7 @@ class SecurityConfig {
                                     authConfig -> {
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll();
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll();
+                                          authConfig.requestMatchers("/api/auth/user").authenticated();
                                           authConfig.requestMatchers("/error").permitAll();
                                           authConfig.requestMatchers(HttpMethod.GET, "/api/books", "/api/books/*")
                                                       .permitAll();

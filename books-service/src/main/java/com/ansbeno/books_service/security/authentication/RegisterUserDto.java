@@ -15,7 +15,7 @@ public record RegisterUserDto(
                 @NotBlank(message = "Phone number is required")
                 @Size(min = 10, max = 15, message = "Phone number must be between 10 and 15 digits")
                 @Pattern(
-                        regexp = "^0[0-9]{9}$",
+                        regexp = "^0\\d{9}$",
                         message = "Phone number is invalid. It should contain only digits and be exactly 10 digits long."
                 )
                 String phone,

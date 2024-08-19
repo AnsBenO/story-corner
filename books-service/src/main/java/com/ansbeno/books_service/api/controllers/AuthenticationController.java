@@ -1,15 +1,9 @@
 package com.ansbeno.books_service.api.controllers;
 
-import com.ansbeno.books_service.security.authentication.AuthenticationRequest;
-import com.ansbeno.books_service.security.authentication.AuthenticationResponse;
-import com.ansbeno.books_service.security.authentication.AuthenticationService;
-import com.ansbeno.books_service.security.authentication.RegisterUserDto;
+import com.ansbeno.books_service.security.authentication.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,5 +21,11 @@ public class AuthenticationController {
       @PostMapping("/login")
       ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
             return ResponseEntity.ok(authenticationService.login(request));
+      }
+
+      @GetMapping("/user")
+      ResponseEntity<CurrentUserResponseDto> getCurrentUser(@RequestHeader("Authorization") String authHeader){
+            String token = authHeader.split(" ")[1];
+            return ResponseEntity.ok(authenticationService.getCurrentUser(token));
       }
 }

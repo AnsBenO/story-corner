@@ -27,9 +27,10 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 (1, 'P101', 'To Kill a Mockingbird', 45.40, 1),
 (2, 'P102', 'The Chronicles of Narnia', 44.50, 1)
 ;
+
 -- Clear out any existing test data to avoid conflicts
 DELETE FROM users WHERE username = 'testuser';
 
 -- Now proceed with the insert
-INSERT INTO users (username, password, email, role, country)
-VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'testuser@test.com', 'CUSTOMER', 'USA');
+INSERT INTO users (username, password, email, phone, role, country)
+VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'testuser@test.com', '0345678903', 'CUSTOMER', 'USA');

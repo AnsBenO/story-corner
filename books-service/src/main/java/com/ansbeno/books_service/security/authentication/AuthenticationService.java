@@ -6,6 +6,7 @@ import java.util.Map;
 import com.ansbeno.books_service.security.exceptions.UserRegistrationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class AuthenticationService {
 
             authenticationManager.authenticate(token);
 
-            UserEntity user = userRepository.findByUsername(request.username()).get();
+            UserEntity user = userRepository.findByUsername(request.username()).orElseThrow(
+                        () -> new UsernameNotFoundException("User " + request.username() + " not found"));
             String jwt = jwtService.generateToken(user, generateExtraClaims(user));
 
             return new AuthenticationResponse(jwt);
@@ -61,6 +63,17 @@ public class AuthenticationService {
             userRepository.save(user);
             String token = jwtService.generateToken(user, generateExtraClaims(user));
             return new AuthenticationResponse(token);
+
+      }
+
+      public CurrentUserResponseDto getCurrentUser(String token) {
+            String username = jwtService.extractUsername(token);
+            UserEntity user = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+            return new CurrentUserResponseDto(
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getPhone());
 
       }
 }
