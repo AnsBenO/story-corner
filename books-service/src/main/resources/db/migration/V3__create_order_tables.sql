@@ -22,13 +22,13 @@ CREATE TABLE orders
     PRIMARY KEY (id)
 );
 
-CREATE TABLE order_items
-(
-    id       BIGINT DEFAULT NEXTVAL('order_item_id_seq') NOT NULL,
-    code     text NOT NULL,
-    name     text NOT NULL,
-    price    NUMERIC NOT NULL,
+CREATE TABLE order_items (
+    id BIGINT DEFAULT NEXTVAL('order_item_id_seq') PRIMARY KEY,
+    code VARCHAR(255) NOT NULL REFERENCES books (code),
+    name TEXT NOT NULL,
+    price NUMERIC NOT NULL,
     quantity INTEGER NOT NULL,
-    PRIMARY KEY (id),
-    order_id BIGINT  NOT NULL REFERENCES orders (id)
+    order_id BIGINT NOT NULL REFERENCES orders (id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

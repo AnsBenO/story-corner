@@ -26,7 +26,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "books")
-class BookEntity {
+public class BookEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_id_generator")
   @SequenceGenerator(name = "book_id_generator", sequenceName = "book_id_seq")

@@ -48,4 +48,5 @@ public class OrderItem {
       @ManyToOne(optional = false)
       @JoinColumn(name = "order_id")
       private OrderEntity order;
+
 }

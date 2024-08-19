@@ -44,6 +44,8 @@ public class UserEntity {
       @Column(unique = true)
       private String country;
 
+      private String phone;
+
       @Enumerated(EnumType.STRING)
       private Role role;
 

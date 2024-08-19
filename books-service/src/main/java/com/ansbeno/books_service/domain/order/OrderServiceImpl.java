@@ -33,61 +33,37 @@ public class OrderServiceImpl implements OrderService {
 
       private static final List<String> DELIVERY_ALLOWED_COUNTRIES = List.of("USA", "GERMANY", "UK");
 
+
       @Override
       public OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException {
             return orderRepository.findByUsernameAndOrderNumber(userName, orderNumber)
-                        .map(OrderMapper::mapToOrderDTO)
-                        .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
-      }
-
-      @Override
-      public void processNewOrders() {
-            List<OrderEntity> orders = orderRepository.findByStatus(OrderStatus.NEW);
-            log.info("Found {} new orders to process", orders.size());
-            orders.forEach(order -> {
-                  try {
-                        process(order);
-                  } catch (Exception e) {
-                        log.error("Failed to process order {}: {}", order.getOrderNumber(), e.getMessage(), e);
-                        orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
-                  }
-            });
-      }
-
-      private void process(OrderEntity order) {
-            if (!canBeDelivered(order)) {
-                  log.warn("Order {} cannot be delivered to {}", order.getOrderNumber(),
-                              order.getDeliveryAddress().country());
-                  orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
-                  return;
-            }
-
-            log.info("Processing payment for order {}", order.getOrderNumber());
-            orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
-            log.info("Order {} has been successfully processed", order.getOrderNumber());
+                    .map(OrderMapper::mapToOrderDTO)
+                    .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
       }
 
       @Override
       public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request)
-                  throws InvalidOrderException, BookNotFoundException {
+              throws InvalidOrderException, BookNotFoundException {
 
             if (!canBeDelivered(request.deliveryAddress().country())) {
                   throw new InvalidOrderException("Delivery not allowed to this country");
             }
             orderValidator.validate(request);
 
+            OrderStatus orderStatus = determineOrderStatus(request);
+
             OrderEntity order = OrderEntity.builder()
-                        .orderNumber(generateOrderNumber())
-                        .username(userName)
-                        .status(OrderStatus.NEW)
-                        .deliveryAddress(request.deliveryAddress())
-                        .customer(request.customer())
-                        .createdAt(LocalDateTime.now())
-                        .build();
+                    .orderNumber(generateOrderNumber())
+                    .username(userName)
+                    .status(orderStatus)
+                    .deliveryAddress(request.deliveryAddress())
+                    .customer(request.customer())
+                    .createdAt(LocalDateTime.now())
+                    .build();
 
             Set<OrderItem> orderItems = request.items().stream()
-                        .map(item -> OrderItemMapper.mapToOrderItemEntity(item, order))
-                        .collect(Collectors.toSet());
+                    .map(item -> OrderItemMapper.mapToOrderItemEntity(item, order))
+                    .collect(Collectors.toSet());
 
             order.setItems(orderItems);
 
@@ -105,14 +81,12 @@ public class OrderServiceImpl implements OrderService {
             return UUID.randomUUID().toString();
       }
 
-      private boolean canBeDelivered(OrderEntity order) {
-            return DELIVERY_ALLOWED_COUNTRIES.contains(
-                        order.getDeliveryAddress().country().toUpperCase());
+      private OrderStatus determineOrderStatus(CreateOrderRequestDTO request) {
+            return canBeDelivered(request.deliveryAddress().country()) ? OrderStatus.DELIVERY_IN_PROGRESS : OrderStatus.CANCELLED;
       }
 
       @Override
       public List<OrderSummary> findOrders(String username) {
             return orderRepository.findByUsername(username);
       }
-
 }

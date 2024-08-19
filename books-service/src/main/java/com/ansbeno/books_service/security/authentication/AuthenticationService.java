@@ -53,6 +53,7 @@ public class AuthenticationService {
             UserEntity user = UserEntity.builder()
                         .username(request.username())
                         .email(request.email())
+                        .phone(request.phone())
                         .password(encoder.encode(request.password()))
                         .country(request.country())
                         .role(Role.CUSTOMER)

@@ -43,11 +43,6 @@ public class OrderController {
       CreateOrderResponseDTO createNewOrder(@Valid @RequestBody CreateOrderRequestDTO request)
                   throws BookNotFoundException {
             String username = securityService.getLoginUsername();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            log.info("Authentication Authorities: {}", authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining(", ")));
             log.info("Creating Order for User {}", username);
             return orderService.createNewOrder(username, request);
       }

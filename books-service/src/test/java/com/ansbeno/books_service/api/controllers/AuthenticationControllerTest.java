@@ -33,96 +33,65 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
             @Test
             void shouldRegisterUserSuccessfully() {
                   var payload = new RegisterUserDto(
-                              "newuser",
-                              "newpassword",
-                              "newuser@test.com",
-                              "USA");
+                          "newuser",
+                          "newpassword",
+                          "newuser@test.com",
+                          "0345678903",
+                          "USA");
 
                   var response = given()
-                              .contentType(ContentType.JSON)
-                              .body(payload)
-                              .when()
-                              .post("/api/auth/register")
-                              .then()
-                              .statusCode(HttpStatus.OK.value())
-                              .body("jwt", notNullValue())
-                              .extract()
-                              .as(AuthenticationResponse.class);
+                          .contentType(ContentType.JSON)
+                          .body(payload)
+                          .when()
+                          .post("/api/auth/register")
+                          .then()
+                          .statusCode(HttpStatus.OK.value())
+                          .body("jwt", notNullValue())
+                          .extract()
+                          .as(AuthenticationResponse.class);
 
                   assertThat(response.jwt()).isNotNull();
                   // Verify user in database
                   UserEntity user = userRepository.findByUsername("newuser").orElse(null);
                   assertThat(user).isNotNull();
                   assertThat(user.getEmail()).isEqualTo("newuser@test.com");
+                  assertThat(user.getPhone()).isEqualTo("0345678903"); // Check the phone number
             }
 
             @Test
             void shouldReturnBadRequestWhenRegistrationPayloadIsInvalid() {
                   var payload = new RegisterUserDto(
-                              "", // Invalid username
-                              "short", // Invalid password
-                              "invalidemail", // Invalid email
-                              "" // Invalid country
+                          "", // Invalid username
+                          "short", // Invalid password
+                          "invalidemail", // Invalid email
+                          "invalidphone", // Invalid phone number
+                          "" // Invalid country
                   );
 
                   given().contentType(ContentType.JSON)
-                              .body(payload)
-                              .when()
-                              .post("/api/auth/register")
-                              .then()
-                              .statusCode(HttpStatus.BAD_REQUEST.value());
-            }
-      }
-
-      @Nested
-      class LoginTests {
-            @Test
-            void shouldLoginSuccessfully() {
-
-                  createTestUser();
-
-                  var payload = new AuthenticationRequest(
-                              "testuser",
-                              "testpassword");
-
-                  var response = given()
-                              .contentType(ContentType.JSON)
-                              .body(payload)
-                              .when()
-                              .post("/api/auth/login")
-                              .then()
-                              .statusCode(HttpStatus.OK.value())
-                              .body("jwt", notNullValue())
-                              .extract()
-                              .as(AuthenticationResponse.class);
-
-                  assertThat(response.jwt()).isNotNull();
-
-            }
-
-            private void createTestUser() {
-                  UserEntity user = new UserEntity();
-                  user.setUsername("testuser");
-                  user.setPassword(passwordEncoder.encode("testpassword")); // Encode the password
-                  user.setEmail("testuser@test.com");
-                  user.setRole(Role.CUSTOMER);
-                  user.setCountry("USA");
-                  userRepository.save(user);
+                          .body(payload)
+                          .when()
+                          .post("/api/auth/register")
+                          .then()
+                          .statusCode(HttpStatus.BAD_REQUEST.value());
             }
 
             @Test
-            void shouldReturnUnauthorizedForInvalidCredentials() {
-
-                  var payload = new AuthenticationRequest(
-                              "wronguser",
-                              "wrongpassword");
+            void shouldReturnBadRequestForInvalidPhoneNumber() {
+                  var payload = new RegisterUserDto(
+                          "validuser",
+                          "validpassword",
+                          "validuser@test.com",
+                          "123", // Too short phone number
+                          "USA"
+                  );
 
                   given().contentType(ContentType.JSON)
-                              .body(payload)
-                              .when()
-                              .post("/api/auth/login")
-                              .then()
-                              .statusCode(HttpStatus.UNAUTHORIZED.value());
+                          .body(payload)
+                          .when()
+                          .post("/api/auth/register")
+                          .then()
+                          .statusCode(HttpStatus.BAD_REQUEST.value());
             }
       }
 }

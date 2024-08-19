@@ -14,23 +14,6 @@ public class OrderMapper {
       OrderMapper() {
       }
 
-      public static OrderEntity mapRequestToEntity(CreateOrderRequestDTO request) {
-            OrderEntity newOrder = OrderEntity.builder()
-                        .orderNumber(UUID.randomUUID().toString())
-                        .status(OrderStatus.NEW)
-                        .customer(request.customer())
-                        .deliveryAddress(request.deliveryAddress())
-                        .build();
-
-            Set<OrderItem> orderItems = request.items()
-                        .stream()
-                        .map(item -> OrderItemMapper.mapToOrderItemEntity(item, newOrder))
-                        .collect(Collectors.toSet());
-
-            newOrder.setItems(orderItems);
-
-            return newOrder;
-      }
 
       public static OrderDTO mapToOrderDTO(OrderEntity order) {
             return OrderDTO.builder()
