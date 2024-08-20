@@ -1,5 +1,5 @@
 <nav id="navDiv"
-      class="px-4 py-2 flex justify-between items-center h-20 fixed z-10 w-full shadow-sm top-0 transition-all">
+      class="px-4 py-2 flex justify-between items-center h-20 fixed z-10 w-full shadow-sm top-0 transition-all bg-slate-50">
       <a routerLink="/home" class="flex items-center">
             <img src="logo.png" alt="Logo" class="w-14 h-14" srcset="">
       </a>
@@ -42,8 +42,9 @@
             </li>
       </ul>
 
+      <!-- Drop down menu -->
       <div [ngClass]="{'h-60':isMenuOpen(), 'h-0': !isMenuOpen()}"
-            class="drop-down absolute top-20 left-0 w-full md:hidden shadow-sm overflow-hidden transition-all">
+            class="drop-down bg-slate-50 absolute top-20 left-0 w-full md:hidden shadow-sm overflow-hidden transition-all">
             <ul class="flex flex-col space-y-4 px-4 pb-4">
                   <li class="relative">
                         <button (click)="openCart()"

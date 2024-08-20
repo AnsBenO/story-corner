@@ -1,5 +1,7 @@
+@if(router.url !== '/login' && router.url !== '/signup'){
 <app-navigation />
-<main class="mt-20">
+}
+<main class="">
       <app-loader />
       <router-outlet />
 </main>

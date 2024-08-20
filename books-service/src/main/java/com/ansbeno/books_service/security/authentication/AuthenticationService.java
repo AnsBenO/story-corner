@@ -36,8 +36,8 @@ public class AuthenticationService {
             UserEntity user = userRepository.findByUsername(request.username()).orElseThrow(
                         () -> new UsernameNotFoundException("User " + request.username() + " not found"));
             String jwt = jwtService.generateToken(user, generateExtraClaims(user));
-
-            return new AuthenticationResponse(jwt);
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
+            return new AuthenticationResponse(jwt, currentUser);
       }
 
       private Map<String, Object> generateExtraClaims(UserEntity user) {
@@ -54,6 +54,8 @@ public class AuthenticationService {
             }
             UserEntity user = UserEntity.builder()
                         .username(request.username())
+                        .firstName(request.firstName())
+                        .lastName(request.lastName())
                         .email(request.email())
                         .phone(request.phone())
                         .password(encoder.encode(request.password()))
@@ -62,7 +64,8 @@ public class AuthenticationService {
                         .build();
             userRepository.save(user);
             String token = jwtService.generateToken(user, generateExtraClaims(user));
-            return new AuthenticationResponse(token);
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
+            return new AuthenticationResponse(token, currentUser);
 
       }
 
@@ -71,9 +74,21 @@ public class AuthenticationService {
             UserEntity user = userRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
             return new CurrentUserResponseDto(
+                        user.getFirstName(),
+                        user.getLastName(),
                         user.getUsername(),
                         user.getEmail(),
                         user.getPhone());
+
+      }
+
+      public AuthenticationResponse refreshToken(String token) {
+            String username = jwtService.extractUsername(token);
+            UserEntity user = userRepository.findByUsername(username).orElseThrow(
+                        () -> new UsernameNotFoundException("User " + username + " not found"));
+            String newToken = jwtService.generateToken(user, generateExtraClaims(user));
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
+            return new AuthenticationResponse(newToken, currentUser);
 
       }
 }

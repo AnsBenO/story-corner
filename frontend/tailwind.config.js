@@ -5,9 +5,9 @@ module.exports = {
     extend: {
       colors: {
         aquamarine: {
-          light: "#a6ffecff",
-          DEFAULT: "#62f9c9ff",
-          dark: "#2cd7a6ff",
+          light: "#00fefe",
+          DEFAULT: "#00f1f1",
+          dark: "#00b2b2",
         },
         "maya-blue": {
           light: "#b0e0ffff",

@@ -1,13 +1,15 @@
-CREATE SEQUENCE user_id_seq START WITH 1 INCREMENT BY 50;
+CREATE SEQUENCE user_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE users (
-    id BIGINT DEFAULT         NEXTVAL('user_id_seq') PRIMARY KEY,
-    username                  VARCHAR(255) UNIQUE NOT NULL,
-    email                     VARCHAR(255) UNIQUE NOT NULL,
-    password                  VARCHAR(255) NOT NULL,
-    country                   VARCHAR(255) NOT NULL,
-    phone                     VARCHAR(255) NOT NULL,
-    role VARCHAR(50)          NOT NULL CHECK (role IN ('CUSTOMER', 'ADMIN')),
-    created_at                TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at                TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id BIGINT DEFAULT NEXTVAL('user_id_seq') PRIMARY KEY,
+  username VARCHAR(255) UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  password VARCHAR(255),
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  country VARCHAR(255),
+  phone VARCHAR(255),
+  role VARCHAR(255),
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

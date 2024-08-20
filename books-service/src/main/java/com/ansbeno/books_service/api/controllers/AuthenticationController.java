@@ -24,8 +24,14 @@ public class AuthenticationController {
       }
 
       @GetMapping("/user")
-      ResponseEntity<CurrentUserResponseDto> getCurrentUser(@RequestHeader("Authorization") String authHeader){
+      ResponseEntity<CurrentUserResponseDto> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
             String token = authHeader.split(" ")[1];
             return ResponseEntity.ok(authenticationService.getCurrentUser(token));
+      }
+
+      @GetMapping("/refresh-token")
+      ResponseEntity<AuthenticationResponse> refreshToken(@RequestHeader("Authorization") String authHeader) {
+            String token = authHeader.split(" ")[1];
+            return ResponseEntity.ok(authenticationService.refreshToken(token));
       }
 }

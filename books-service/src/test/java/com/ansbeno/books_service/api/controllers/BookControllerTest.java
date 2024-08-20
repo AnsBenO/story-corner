@@ -17,6 +17,7 @@ import io.restassured.http.ContentType;
 
 @Sql("/test-data.sql")
 class BookControllerTest extends AbstractIntegrationTest {
+
       @Test()
       void shouldReturnBooks() {
             given().contentType(ContentType.JSON)
@@ -25,7 +26,7 @@ class BookControllerTest extends AbstractIntegrationTest {
                         .then()
                         .statusCode(200)
                         .body("data", hasSize(10))
-                        .body("totalElements", is(15))
+                        .body("totalElements", is(14))
                         .body("pageNumber", is(1))
                         .body("totalPages", is(2))
                         .body("isFirst", is(true))

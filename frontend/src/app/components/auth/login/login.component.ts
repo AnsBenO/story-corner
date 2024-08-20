@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrls: ['./login.component.scss', '../auth.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {}

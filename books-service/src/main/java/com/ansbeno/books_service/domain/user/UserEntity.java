@@ -29,8 +29,8 @@ import lombok.Setter;
 @Table(name = "users")
 public class UserEntity {
       @Id
-      @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
-      @SequenceGenerator(name = "user_id_generator", sequenceName = "user_id_seq")
+      @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+      @SequenceGenerator(name = "user_seq", sequenceName = "user_id_seq", allocationSize = 1)
       private Long id;
 
       @Column(unique = true)
@@ -40,6 +40,12 @@ public class UserEntity {
       private String email;
 
       private String password;
+
+      @Column(nullable = false)
+      private String firstName;
+
+      @Column(nullable = false)
+      private String lastName;
 
       @Column(unique = true)
       private String country;

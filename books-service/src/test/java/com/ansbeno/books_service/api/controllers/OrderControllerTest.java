@@ -51,7 +51,6 @@ public class OrderControllerTest extends AbstractIntegrationTest {
         UserEntity user = userRepository.findByUsername("testuser")
                 .orElseThrow(() -> new RuntimeException("Test user not found in the database"));
 
-
         jwtToken = jwtService.generateToken(user, Map.of("role", user.getRole().name()));
     }
 
@@ -118,7 +117,6 @@ public class OrderControllerTest extends AbstractIntegrationTest {
                     Arguments.arguments(Named.named("Order with No Items",
                             TestDataFactory.createOrderRequestWithNoItems())));
         }
-
 
         @Test
         void shouldReturnBadRequestWhenMandatoryDataIsMissing() {

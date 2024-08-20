@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { LoaderComponent } from './components/common/loader/loader.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
@@ -11,6 +11,7 @@ import { NotificationComponent } from './components/common/notification/notifica
   standalone: true,
   imports: [
     RouterOutlet,
+    RouterModule,
     LoaderComponent,
     NotFoundComponent,
     NavigationComponent,
@@ -21,4 +22,5 @@ import { NotificationComponent } from './components/common/notification/notifica
 })
 export class AppComponent {
   title = 'book store';
+  router = inject(Router);
 }

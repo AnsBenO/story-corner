@@ -31,6 +31,17 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 -- Clear out any existing test data to avoid conflicts
 DELETE FROM users WHERE username = 'testuser';
 
--- Now proceed with the insert
-INSERT INTO users (username, password, email, phone, role, country)
-VALUES ('testuser', '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O', 'testuser@test.com', '0345678903', 'CUSTOMER', 'USA');
+-- Now proceed with the insert, including created_at and updated_at fields
+INSERT INTO users (username, first_name, last_name, password, email, phone, role, country, created_at, updated_at)
+VALUES (
+  'testuser',
+  'John',
+  'Doe',
+  '$2a$10$DowJTO.e/l8Vs6t1L9x/mOIuK9nDToZ7j1r0jZD3NAdD5kJROUw7O',  -- Assume this is a valid bcrypt hashed password
+  'testuser@test.com',
+  '0345678903',
+  'CUSTOMER',
+  'USA',
+  NOW(),  -- Use the current timestamp for created_at
+  NOW()   -- Use the current timestamp for updated_at
+);

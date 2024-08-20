@@ -53,6 +53,11 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .as(AuthenticationResponse.class);
 
                         assertThat(response.jwt()).isNotNull();
+                        assertThat(response.user().username()).isEqualTo("testuser");
+                        assertThat(response.user().firstName()).isEqualTo("John");
+                        assertThat(response.user().lastName()).isEqualTo("Doe");
+                        assertThat(response.user().email()).isEqualTo("testuser@test.com");
+                        assertThat(response.user().phone()).isEqualTo("0634256790");
 
                 }
 
@@ -80,7 +85,6 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
                         createTestUser("testuser2");
 
-                        // Log in to get the JWT token
                         var loginPayload = new AuthenticationRequest(
                                         "testuser2",
                                         "testpassword");
@@ -109,6 +113,8 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
                         // Verify the returned user details
                         assertThat(currentUserResponse.username()).isEqualTo("testuser2");
+                        assertThat(currentUserResponse.firstName()).isEqualTo("John");
+                        assertThat(currentUserResponse.lastName()).isEqualTo("Doe");
                         assertThat(currentUserResponse.email()).isEqualTo("testuser2@test.com");
                         assertThat(currentUserResponse.phone()).isEqualTo("0634256790");
                 }
@@ -120,6 +126,8 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 @Test
                 void shouldRegisterUserSuccessfully() {
                         var payload = new RegisterUserDto(
+                                        "John",
+                                        "Doe",
                                         "newuser",
                                         "newpassword",
                                         "newuser@test.com",
@@ -138,6 +146,11 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .as(AuthenticationResponse.class);
 
                         assertThat(response.jwt()).isNotNull();
+                        assertThat(response.user().username()).isEqualTo("newuser");
+                        assertThat(response.user().firstName()).isEqualTo("John");
+                        assertThat(response.user().lastName()).isEqualTo("Doe");
+                        assertThat(response.user().email()).isEqualTo("newuser@test.com");
+                        assertThat(response.user().phone()).isEqualTo("0345678903");
                         // Verify user in database
                         UserEntity user = userRepository.findByUsername("newuser").orElse(null);
                         assertThat(user).isNotNull();
@@ -148,6 +161,8 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 @Test
                 void shouldReturnBadRequestWhenRegistrationPayloadIsInvalid() {
                         var payload = new RegisterUserDto(
+                                        "John",
+                                        "Doe",
                                         "", // Invalid username
                                         "short", // Invalid password
                                         "invalidemail", // Invalid email
@@ -166,6 +181,8 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 @Test
                 void shouldReturnBadRequestForInvalidPhoneNumber() {
                         var payload = new RegisterUserDto(
+                                        "John",
+                                        "Doe",
                                         "validuser",
                                         "validpassword",
                                         "validuser@test.com",
@@ -181,9 +198,53 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 }
         }
 
+        @Nested
+        class RefreshToken {
+                @Test
+                void shouldRefreshTokenSuccessfully() {
+                        createTestUser("testuser3");
+
+                        var loginPayload = new AuthenticationRequest(
+                                        "testuser3",
+                                        "testpassword");
+
+                        var loginResponse = given()
+                                        .contentType(ContentType.JSON)
+                                        .body(loginPayload)
+                                        .when()
+                                        .post("/api/auth/login")
+                                        .then()
+                                        .statusCode(HttpStatus.OK.value())
+                                        .extract()
+                                        .as(AuthenticationResponse.class);
+
+                        var token = loginResponse.jwt();
+
+                        var response = given()
+                                        .contentType(ContentType.JSON)
+                                        .header("Authorization", "Bearer " + token)
+                                        .when()
+                                        .get("/api/auth/refresh-token")
+                                        .then()
+                                        .statusCode(HttpStatus.OK.value())
+                                        .extract()
+                                        .as(AuthenticationResponse.class);
+
+                        assertThat(response.jwt()).isNotNull();
+                        assertThat(response.user().username()).isEqualTo("testuser3");
+                        assertThat(response.user().firstName()).isEqualTo("John");
+                        assertThat(response.user().lastName()).isEqualTo("Doe");
+                        assertThat(response.user().email()).isEqualTo("testuser3@test.com");
+                        assertThat(response.user().phone()).isEqualTo("0634256790");
+
+                }
+        }
+
         private void createTestUser(String username) {
                 UserEntity user = new UserEntity();
                 user.setUsername(username);
+                user.setFirstName("John");
+                user.setLastName("Doe");
                 user.setPassword(passwordEncoder.encode("testpassword")); // Encode the password
                 user.setEmail(username + "@test.com");
                 user.setPhone("0634256790");
