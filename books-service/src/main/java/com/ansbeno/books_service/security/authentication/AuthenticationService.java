@@ -35,9 +35,15 @@ public class AuthenticationService {
 
             UserEntity user = userRepository.findByUsername(request.username()).orElseThrow(
                         () -> new UsernameNotFoundException("User " + request.username() + " not found"));
-            String jwt = jwtService.generateToken(user, generateExtraClaims(user));
-            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
-            return new AuthenticationResponse(jwt, currentUser);
+            String accessToken = jwtService.generateAccessToken(user, generateExtraClaims(user));
+            String refreshToken = jwtService.generateRefreshToken(user, generateExtraClaims(user));
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getPhone());
+            return new AuthenticationResponse(accessToken, refreshToken, currentUser);
       }
 
       private Map<String, Object> generateExtraClaims(UserEntity user) {
@@ -49,8 +55,23 @@ public class AuthenticationService {
       }
 
       public AuthenticationResponse register(RegisterUserDto request) {
+
+            StringBuilder errorMessage = new StringBuilder();
             if (userRepository.existsByUsername(request.username())) {
-                  throw new UserRegistrationException("Username '" + request.username() + "' is already taken.");
+                  errorMessage.append("Username '").append("' is already taken.");
+            }
+
+            // Check if the email is already taken
+            if (userRepository.existsByEmail(request.email())) {
+                  if (errorMessage.length() > 0) {
+                        errorMessage.append("|");
+                  }
+                  errorMessage.append("Email '").append("' is already taken.");
+            }
+
+            // If there are any errors, throw an exception with the accumulated message
+            if (errorMessage.length() > 0) {
+                  throw new UserRegistrationException(errorMessage.toString());
             }
             UserEntity user = UserEntity.builder()
                         .username(request.username())
@@ -63,14 +84,16 @@ public class AuthenticationService {
                         .role(Role.CUSTOMER)
                         .build();
             userRepository.save(user);
-            String token = jwtService.generateToken(user, generateExtraClaims(user));
-            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
-            return new AuthenticationResponse(token, currentUser);
+            String accessToken = jwtService.generateAccessToken(user, generateExtraClaims(user));
+            String refreshToken = jwtService.generateRefreshToken(user, generateExtraClaims(user));
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(), user.getLastName(),
+                        user.getUsername(), user.getEmail(), user.getPhone());
+            return new AuthenticationResponse(accessToken, refreshToken, currentUser);
 
       }
 
       public CurrentUserResponseDto getCurrentUser(String token) {
-            String username = jwtService.extractUsername(token);
+            String username = jwtService.extractUsernameFromAccessToken(token);
             UserEntity user = userRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
             return new CurrentUserResponseDto(
@@ -82,13 +105,14 @@ public class AuthenticationService {
 
       }
 
-      public AuthenticationResponse refreshToken(String token) {
-            String username = jwtService.extractUsername(token);
+      public AuthenticationResponse refreshToken(String refreshToken) {
+            String username = jwtService.extractUsernameFromRefreshToken(refreshToken);
             UserEntity user = userRepository.findByUsername(username).orElseThrow(
                         () -> new UsernameNotFoundException("User " + username + " not found"));
-            String newToken = jwtService.generateToken(user, generateExtraClaims(user));
-            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhone());
-            return new AuthenticationResponse(newToken, currentUser);
+            String newAccessToken = jwtService.generateAccessToken(user, generateExtraClaims(user));
+            CurrentUserResponseDto currentUser = new CurrentUserResponseDto(user.getFirstName(), user.getLastName(),
+                        user.getUsername(), user.getEmail(), user.getPhone());
+            return new AuthenticationResponse(newAccessToken, refreshToken, currentUser);
 
       }
 }

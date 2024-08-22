@@ -3,10 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  HostListener,
   inject,
-  signal,
-  WritableSignal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
@@ -86,15 +83,7 @@ export class SignupComponent {
       ],
       confirmPassword: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^0\d{9}$/),
-          Validators.minLength(this.minLengths.phone),
-          Validators.maxLength(15),
-        ],
-      ],
+      phone: ['', [Validators.required, Validators.pattern(/^0\d{9}$/)]],
       country: [
         '',
         [Validators.required, Validators.maxLength(this.maxLengths.country)],
@@ -111,17 +100,20 @@ export class SignupComponent {
   countryIcon = faGlobe;
 
   onSubmit() {
+    const dataToSubmit = <RegisterPayload>this.signupForm.getRawValue();
+    delete dataToSubmit.confirmPassword;
     this.authService
-      .register(this.signupForm.getRawValue() as RegisterPayload)
+      .register(dataToSubmit)
       .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe(() => {
-        this.notificationStore.notify(
-          'You are now registered',
-          NotificationType.SUCCESS
-        );
-        this.router.navigate(['/']);
+      .subscribe({
+        next: () => {
+          this.notificationStore.notify(
+            'You are now registered',
+            NotificationType.SUCCESS
+          );
+          this.router.navigate(['/']);
+        },
       });
-    console.log('Form Data: ', this.signupForm.getRawValue()); // correct data is logged
   }
 
   public isInvalidInput(inputName: string): boolean {

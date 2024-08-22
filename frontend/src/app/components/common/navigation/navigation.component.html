@@ -5,7 +5,7 @@
       </a>
       <div class="flex md:hidden">
             <button id="closeMenu" (click)="toggleMenu()"
-                  class="text-aquamarine-dark hover:text-night focus:outline-none transition-colors">
+                  class="text-celeste-dark hover:text-night focus:outline-none transition-colors">
                   @if(!isMenuOpen()){
                   <fa-icon [icon]="menuIcon" class="text-2xl" />
 
@@ -18,7 +18,7 @@
       <ul class="hidden md:flex space-x-6">
             <li class="relative">
                   <button (click)="openCart()"
-                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
+                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors">
                         <fa-icon class="text-xl" [icon]="cartIcon" />
                         <span
                               class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">{{cartStore.itemsCount()}}</span>
@@ -26,20 +26,30 @@
             </li>
             <li class="relative">
                   <button
-                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors">
+                        class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors">
                         <fa-icon class="text-xl" [icon]="bellIcon" />
                         <span
                               class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">0</span>
                   </button>
             </li>
+            @if(authService.currentUser() === null || authService.currentUser() === undefined){
+
             <li>
                   <a routerLink="/login"
-                        class="flex text-lg px-4 py-2 rounded font-semibold text-aquamarine-dark hover:bg-cyan-100 hover:text-night transition-colors">login</a>
+                        class="flex text-lg px-4 py-2 rounded font-semibold text-celeste-dark hover:bg-cyan-100 hover:text-night transition-colors">login</a>
             </li>
             <li>
                   <a routerLink="/signup"
-                        class="flex text-lg font-semibold bg-aquamarine-dark text-night px-4 py-2 rounded-lg hover:bg-aquamarine-light transition-colors">signup</a>
+                        class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors">signup</a>
             </li>
+            } @else {
+            <li>
+                  <button (click)="logout()"
+                        class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors">
+                        logout
+                  </button>
+            </li>
+            }
       </ul>
 
       <!-- Drop down menu -->
@@ -48,7 +58,7 @@
             <ul class="flex flex-col space-y-4 px-4 pb-4">
                   <li class="relative">
                         <button (click)="openCart()"
-                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
                               <span>cart</span>
                               <span
                                     class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
@@ -56,20 +66,29 @@
                   </li>
                   <li class="relative">
                         <button
-                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-aquamarine-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
                               <span>notifications</span>
                               <span
                                     class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">0</span>
                         </button>
                   </li>
+                  @if(authService.currentUser() === null || authService.currentUser() === undefined){
+
                   <li>
                         <a routerLink="/login"
-                              class="flex text-lg px-4 py-2 rounded font-semibold text-aquamarine-dark hover:bg-cyan-100 hover:text-night transition-colors w-full justify-between">login</a>
+                              class="flex text-lg px-4 py-2 rounded font-semibold text-celeste-dark hover:bg-cyan-100 hover:text-night transition-colors w-full justify-between">login</a>
                   </li>
                   <li>
                         <a routerLink="/signup"
-                              class="flex text-lg font-semibold bg-aquamarine-dark text-night px-4 py-2 rounded-lg hover:bg-aquamarine-light transition-colors w-full justify-between">signup</a>
+                              class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">signup</a>
                   </li>
+                  } @else {
+                  <li>
+                        <button (click)="logout()"
+                              class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">
+                              logout</button>
+                  </li>
+                  }
             </ul>
       </div>
 

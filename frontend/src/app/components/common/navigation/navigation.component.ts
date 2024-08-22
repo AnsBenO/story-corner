@@ -8,8 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CartStore } from '../../store/cart.store';
-import { CartComponent } from '../cart/cart.component';
+import { CartStore } from '../../../store/cart.store';
+import { CartComponent } from '../../cart/cart.component';
 import {
   faBars,
   faBell,
@@ -17,6 +17,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -29,6 +30,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 })
 export class NavigationComponent {
   cartStore = inject(CartStore);
+  authService = inject(AuthService);
   showCart: WritableSignal<boolean> = signal(false);
   isMenuOpen: WritableSignal<boolean> = signal(false);
   menuIcon = faBars;
@@ -46,6 +48,10 @@ export class NavigationComponent {
 
   closeCart() {
     this.showCart.set(false);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   @HostListener('document:click', ['$event'])

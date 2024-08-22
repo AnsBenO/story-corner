@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Embeddable
 public record Customer(
-            @NotBlank(message = "Customer Name is required") String name,
+            @NotBlank(message = "Customer Name is required") String username,
             @NotBlank(message = "Customer email is required") @Email String email,
             @NotBlank(message = "Customer phone number is required") String phone) {
 }

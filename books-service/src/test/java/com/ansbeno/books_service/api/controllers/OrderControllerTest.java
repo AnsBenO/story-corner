@@ -51,7 +51,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
         UserEntity user = userRepository.findByUsername("testuser")
                 .orElseThrow(() -> new RuntimeException("Test user not found in the database"));
 
-        jwtToken = jwtService.generateToken(user, Map.of("role", user.getRole().name()));
+        jwtToken = jwtService.generateAccessToken(user, Map.of("role", user.getRole().name()));
     }
 
     @Nested
@@ -64,7 +64,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
             var payload = """
                     {
                         "customer": {
-                            "name": "Hello Geoe",
+                            "username": "Hello_Geoe",
                             "email": "ans@email.com",
                             "phone": "999999999"
                         },

@@ -4,7 +4,7 @@ import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { NewOrder } from '../types/new-order.type';
+import { NewOrderPayload } from '../types/new-order-payload.type';
 import { NewOrderResponse } from '../types/new-order-response.type';
 import {
   NotificationStore,
@@ -33,7 +33,7 @@ export class OrderService {
     return of(items);
   }
 
-  submitOrder(order: NewOrder) {
+  submitOrder(order: NewOrderPayload) {
     return this.http
       .post<NewOrderResponse>(`${environment.API_URL}/orders`, order)
       .pipe(

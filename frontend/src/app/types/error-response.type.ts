@@ -1,7 +1,11 @@
 export interface ErrorResponse {
-  timestamp: Date;
+  type: string;
+  title: string;
   status: number;
-  error: string;
-  message: string;
+  detail: string;
+  instance: string;
+  service: string;
+  error_category: string;
+  timestamp: Date;
   path: string;
 }

@@ -40,7 +40,7 @@ class SecurityConfig {
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll();
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll();
                                           authConfig.requestMatchers("/api/auth/user").authenticated();
-                                          authConfig.requestMatchers("/api/auth/refresh-token").authenticated();
+                                          authConfig.requestMatchers("/api/auth/refresh-token").permitAll();
                                           authConfig.requestMatchers("/error").permitAll();
                                           authConfig.requestMatchers(HttpMethod.GET, "/api/books", "/api/books/*")
                                                       .permitAll();

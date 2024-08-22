@@ -49,7 +49,7 @@ public class OrderEntity {
 
       @Embedded
       @AttributeOverrides(value = {
-                  @AttributeOverride(name = "name", column = @Column(name = "customer_name")),
+                  @AttributeOverride(name = "username", column = @Column(name = "customer_name")),
                   @AttributeOverride(name = "email", column = @Column(name = "customer_email")),
                   @AttributeOverride(name = "phone", column = @Column(name = "customer_phone"))
       })

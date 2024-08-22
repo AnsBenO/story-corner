@@ -4,13 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        aquamarine: {
-          light: "#00fefe",
-          DEFAULT: "#00f1f1",
-          dark: "#00b2b2",
+        celeste: {
+          light: "#B5FFFB",
+          DEFAULT: "#7FFFEF",
+          dark: "#66CCC0",
         },
         "maya-blue": {
-          light: "#b0e0ffff",
+          light: "#C2E0F4",
           DEFAULT: "#80c5faff",
           dark: "#4aa9d9ff",
         },

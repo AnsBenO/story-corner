@@ -6,5 +6,6 @@
     }
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cSpell.words": ["passwordmatcherror"]
 }

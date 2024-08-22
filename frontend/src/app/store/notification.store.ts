@@ -21,10 +21,16 @@ export const NotificationStore = signalStore(
   { providedIn: 'root' },
   withState<TNotificationState>(initialState),
   withMethods((store) => ({
-    notify(message: string, type: NotificationType) {
-      const notification = { message, type };
-      patchState(store, { notification });
-      console.log('notifications: ', store.notification());
+    notify(message: string | string[], type: NotificationType) {
+      if (typeof message === 'string') {
+        const notification = { message, type };
+        patchState(store, { notification });
+      } else {
+        message.forEach((msg) => {
+          const notification: TNotification = { message: msg, type };
+          setTimeout(() => patchState(store, { notification }), 500);
+        });
+      }
     },
   }))
 );

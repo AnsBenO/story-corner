@@ -14,7 +14,6 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Book } from '../../types/book.type';
 import { CartStore } from '../../store/cart.store';
-import { BookCartItem } from '../../types/book-cart-item.type';
 
 @Component({
   selector: 'app-book-detail',
@@ -27,6 +26,7 @@ import { BookCartItem } from '../../types/book-cart-item.type';
 export class BookDetailComponent {
   @Input() book!: Book;
   @Output() onClose = new EventEmitter<void>();
+  @Output() onAddToCart = new EventEmitter<Book>();
   cartStore = inject(CartStore);
   closingModal: WritableSignal<boolean> = signal(false);
   xMark = faXmark;
@@ -40,13 +40,7 @@ export class BookDetailComponent {
   }
 
   addToCart(book: Book) {
-    const updatedItem: BookCartItem = {
-      code: book.code,
-      name: book.name,
-      price: book.price,
-      quantity: 1,
-    };
-    this.cartStore.addItem(updatedItem);
+    this.onAddToCart.emit(book);
   }
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])

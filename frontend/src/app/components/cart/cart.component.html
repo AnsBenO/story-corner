@@ -16,6 +16,9 @@
                               <li
                                     class="flex items-center justify-between mb-4 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
                                     <div class="flex items-center space-x-4">
+                                          <div class="w-14">
+                                                <img [src]="item.imageUrl" class="rounded-md" alt="" srcset="">
+                                          </div>
                                           <div class="">
                                                 <h3 class="text-lg font-semibold">{{item.name}}</h3>
 
@@ -35,7 +38,7 @@
                                                 class="text-sm font-bold bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300"
                                                 (click)="increaseQuantity(item.code)"><fa-icon
                                                       [icon]="plusIcon" /></button>
-                                          <span class="text-lg">{{item.price * item.quantity| currency}}</span>
+                                          <span class="text-lg">{{item.price | currency}}</span>
                                     </div>
                               </li>
 
@@ -43,26 +46,35 @@
                         </ul>
 
                   </div>
-
                   <!-- Order Summary Section -->
-                  <div class="w-full md:w-1/3 lg:pr-4 bg-slate-100 p-4 flex flex-col justify-between">
-                        <h2 class="text-2xl font-semibold mb-4">Order Summary</h2>
-                        <div class="mb-4 grow">
-                              <p class="flex justify-between">
-                                    <span>Items</span>
-                                    <span>{{cartStore.itemsCount()}}</span>
-                              </p>
+                  <div class="w-full md:w-5/12 lg:pr-4 bg-slate-100 p-2 flex flex-col justify-between">
+                        <h2 class="text-2xl font-semibold mb-6">Order Summary</h2>
 
+                        <div class="mb-6">
+                              <div class="flex justify-between mb-3">
+                                    <span class="text-lg">Items</span>
+                                    <span class="font-medium">{{cartStore.itemsCount()}}</span>
+                              </div>
+
+                              <div>
+                                    @for (item of cartStore.items(); track item.code) {
+                                    <div class="flex justify-between mb-2 text-sm text-cool-gray">
+                                          <span>{{item.name}} ({{item.quantity}}) </span>
+                                          <span class="text-night-light">{{item.price * item.quantity| currency}}</span>
+                                    </div>
+                                    }
+                              </div>
                         </div>
 
-                        <div class="border-t border-gray-300 pt-4 grow-0">
-                              <p class="flex justify-between text-lg font-semibold">
+                        <div class="border-t border-gray-300 pt-4">
+                              <p class="flex justify-between text-xl font-semibold">
                                     <span>Total Cost</span>
-                                    <span>{{cartStore.totalPrice()| currency}}</span>
+                                    <span class="text-night-dark">{{cartStore.totalPrice() | currency}}</span>
                               </p>
                         </div>
+
                         <button
-                              class="bg-aquamarine-dark text-night font-bold w-full py-3 mt-4 rounded-lg hover:bg-aquamarine transition"
+                              class="bg-celeste-dark text-night font-bold w-full py-3 mt-6 rounded-lg hover:bg-celeste transition-colors duration-300"
                               (click)="checkout()">Checkout</button>
                   </div>
             </div>

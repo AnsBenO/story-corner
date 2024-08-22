@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Min;
 
 @ConfigurationProperties(prefix = "jwtsecurity")
 public record SecurityProperties(
-            @DefaultValue("15") @Min(1) int jwtExpirationMinutes,
-            String jwtSecretKey) {
+            @DefaultValue("15") @Min(1) int accessTokenExpirationMinutes,
+            @DefaultValue("1440") @Min(1) int refreshTokenExpirationMinutes,
+            String accessTokenSecretKey,
+            String refreshTokenSecretKey
+            ) {
 }

@@ -48,11 +48,12 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .post("/api/auth/login")
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
-                                        .body("jwt", notNullValue())
+                                        .body("accessToken", notNullValue())
                                         .extract()
                                         .as(AuthenticationResponse.class);
 
-                        assertThat(response.jwt()).isNotNull();
+                        assertThat(response.accessToken()).isNotNull();
+                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("testuser");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");
@@ -100,7 +101,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .as(AuthenticationResponse.class);
 
                         // Use the token to get the current user details
-                        var token = loginResponse.jwt();
+                        var token = loginResponse.accessToken();
 
                         var currentUserResponse = given()
                                         .header("Authorization", "Bearer " + token)
@@ -141,11 +142,12 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .post("/api/auth/register")
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
-                                        .body("jwt", notNullValue())
+                                        .body("accessToken", notNullValue())
                                         .extract()
                                         .as(AuthenticationResponse.class);
 
-                        assertThat(response.jwt()).isNotNull();
+                        assertThat(response.accessToken()).isNotNull();
+                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("newuser");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");
@@ -218,19 +220,20 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .extract()
                                         .as(AuthenticationResponse.class);
 
-                        var token = loginResponse.jwt();
+                        var refreshToken = loginResponse.refreshToken();
 
                         var response = given()
                                         .contentType(ContentType.JSON)
-                                        .header("Authorization", "Bearer " + token)
+                                        .body(refreshToken)
                                         .when()
-                                        .get("/api/auth/refresh-token")
+                                        .post("/api/auth/refresh-token")
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
                                         .extract()
                                         .as(AuthenticationResponse.class);
 
-                        assertThat(response.jwt()).isNotNull();
+                        assertThat(response.accessToken()).isNotNull();
+                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("testuser3");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");

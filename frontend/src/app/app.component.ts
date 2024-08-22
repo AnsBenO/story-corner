@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { LoaderComponent } from './components/common/loader/loader.component';
-import { NavigationComponent } from './components/navigation/navigation.component';
+import { NavigationComponent } from './components/common/navigation/navigation.component';
 
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
 import { NotificationComponent } from './components/common/notification/notification.component';

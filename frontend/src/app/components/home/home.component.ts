@@ -80,6 +80,7 @@ export class HomeComponent implements OnInit {
 
   addToCart(book: Book) {
     const updatedItem: BookCartItem = {
+      imageUrl: book.imageUrl,
       code: book.code,
       name: book.name,
       price: book.price,

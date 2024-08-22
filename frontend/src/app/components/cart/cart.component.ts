@@ -15,6 +15,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMinus, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { CartStore } from '../../store/cart.store';
 import { Router } from '@angular/router';
+import {
+  NotificationStore,
+  NotificationType,
+} from '../../store/notification.store';
 
 @Component({
   selector: 'app-cart',
@@ -29,6 +33,7 @@ export class CartComponent {
   cartStore = inject(CartStore);
   router = inject(Router);
   destroy = inject(DestroyRef);
+  notificationStore = inject(NotificationStore);
 
   xMarkIcon = faXmark;
   plusIcon = faPlus;
@@ -63,6 +68,11 @@ export class CartComponent {
     if (this.cartStore.items().length > 0) {
       this.closeCart();
       this.cartStore.checkout();
+    } else {
+      this.notificationStore.notify(
+        'Your cart is empty',
+        NotificationType.INFO
+      );
     }
   }
 

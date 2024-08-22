@@ -5,9 +5,9 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.ansbeno.books_service.SecurityProperties;
 import com.ansbeno.books_service.domain.user.UserEntity;
 
 import io.jsonwebtoken.Jwts;
@@ -15,38 +15,59 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+      private final SecurityProperties properties;
 
-      @Value("${jwtsecurity.jwt-expiration-minutes}")
-      private Long expirationMinutes;
+      private SecretKey accessKey;
 
-      @Value("${jwtsecurity.jwt-secret-key}")
-      private String secretKey;
-
-      private SecretKey key;
+      private SecretKey refreshKey;
 
       @PostConstruct
       public void init() {
-            key = Keys.hmacShaKeyFor(secretKey.getBytes());
+            accessKey = Keys.hmacShaKeyFor(properties.accessTokenSecretKey().getBytes());
+            refreshKey = Keys.hmacShaKeyFor(properties.refreshTokenSecretKey().getBytes());
       }
 
-      public String generateToken(UserEntity user, Map<String, Object> extraClaims) {
+      public String generateAccessToken(UserEntity user, Map<String, Object> extraClaims) {
             Date issueAt = new Date(System.currentTimeMillis());
-            Date expiration = new Date(issueAt.getTime() + (expirationMinutes * 60 * 1000));
+            Date expiration = new Date(issueAt.getTime() + (properties.accessTokenExpirationMinutes() * 60 * 1000));
             return Jwts.builder()
                         .claims(extraClaims)
                         .subject(user.getUsername())
                         .issuedAt(issueAt)
                         .expiration(expiration)
-                        .signWith(key, SIG.HS256)
+                        .signWith(accessKey, SIG.HS256)
                         .compact();
       }
 
-      public String extractUsername(String jwt) {
+      public String extractUsernameFromAccessToken(String jwt) {
             return Jwts.parser()
-                        .verifyWith(key)
+                        .verifyWith(accessKey)
+                        .build()
+                        .parseSignedClaims(jwt)
+                        .getPayload()
+                        .getSubject();
+      }
+
+      public String generateRefreshToken(UserEntity user, Map<String, Object> extraClaims) {
+            Date issueAt = new Date(System.currentTimeMillis());
+            Date expiration = new Date(issueAt.getTime() + (properties.refreshTokenExpirationMinutes() * 60 * 1000));
+            return Jwts.builder()
+                        .claims(extraClaims)
+                        .subject(user.getUsername())
+                        .issuedAt(issueAt)
+                        .expiration(expiration)
+                        .signWith(refreshKey, SIG.HS256)
+                        .compact();
+      }
+
+      public String extractUsernameFromRefreshToken(String jwt) {
+            return Jwts.parser()
+                        .verifyWith(refreshKey)
                         .build()
                         .parseSignedClaims(jwt)
                         .getPayload()
