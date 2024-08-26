@@ -5,7 +5,7 @@
       </a>
       <div class="flex md:hidden">
             <button id="closeMenu" (click)="toggleMenu()"
-                  class="text-celeste-dark hover:text-night focus:outline-none transition-colors">
+                  class="text-celeste-dark hover:text-night focus:outline-none transition-colors z-50">
                   @if(!isMenuOpen()){
                   <fa-icon [icon]="menuIcon" class="text-2xl" />
 
@@ -52,44 +52,61 @@
             }
       </ul>
 
-      <!-- Drop down menu -->
-      <div [ngClass]="{'h-60':isMenuOpen(), 'h-0': !isMenuOpen()}"
-            class="drop-down bg-slate-50 absolute top-20 left-0 w-full md:hidden shadow-sm overflow-hidden transition-all">
-            <ul class="flex flex-col space-y-4 px-4 pb-4">
-                  <li class="relative">
-                        <button (click)="openCart()"
-                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
-                              <span>cart</span>
-                              <span
-                                    class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
-                        </button>
-                  </li>
-                  <li class="relative">
-                        <button
-                              class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
-                              <span>notifications</span>
-                              <span
-                                    class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">0</span>
-                        </button>
-                  </li>
-                  @if(authService.currentUser() === null || authService.currentUser() === undefined){
+      <!-- Side menu -->
+      <div id="outside" class="fixed inset-0 z-40 md:hidden transform transition-all"
+            (click)="toggleMenuOutsideClick($event)"
+            [ngClass]="{ 'translate-x-full bg-opacity-100': !isMenuOpen(), 'translate-x-0 bg-gray-800 bg-opacity-75': isMenuOpen() }">
 
-                  <li>
-                        <a routerLink="/login"
-                              class="flex text-lg px-4 py-2 rounded font-semibold text-celeste-dark hover:bg-cyan-100 hover:text-night transition-colors w-full justify-between">login</a>
-                  </li>
-                  <li>
-                        <a routerLink="/signup"
-                              class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">signup</a>
-                  </li>
-                  } @else {
-                  <li>
-                        <button (click)="logout()"
-                              class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">
-                              logout</button>
-                  </li>
-                  }
-            </ul>
+            <div id="menuDiv" (click)="$event.stopPropagation()" [ngClass]="{'w-60':isMenuOpen(), 'w-0': !isMenuOpen()}"
+                  class="side-menu w-64 flex flex-col bg-slate-50 absolute top-0 right-0 h-lvh md:hidden shadow-sm overflow-hidden transition-all pt-20">
+                  <div class="flex-1">
+                        <ul class="flex flex-col space-y-4 px-4 py-4 h-full">
+                              <li class="relative">
+                                    <button (click)="openCart()"
+                                          class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                                          <span>cart</span>
+                                          <span
+                                                class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{cartStore.itemsCount()}}</span>
+                                    </button>
+                              </li>
+                              <li class="relative">
+                                    <button
+                                          class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
+                                          <span>notifications</span>
+                                          <span
+                                                class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">0</span>
+                                    </button>
+                              </li>
+                        </ul>
+                  </div>
+                  <div class="flex-0">
+                        <ul class=" border-t border-gray-300 flex flex-col space-y-4 mx-4 py-4 h-full">
+                              @if(authService.currentUser() === null || authService.currentUser() === undefined){
+
+                              <li>
+                                    <a routerLink="/login"
+                                          class="flex text-lg px-4 py-2 rounded font-semibold text-celeste-dark hover:bg-cyan-100 hover:text-night transition-colors w-full justify-between">login</a>
+                              </li>
+                              <li>
+                                    <a routerLink="/signup"
+                                          class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">signup</a>
+                              </li>
+
+                              }@else {
+
+                              <li>
+                                    <button (click)="logout()"
+                                          class="flex text-lg font-semibold bg-celeste-dark text-night px-4 py-2 rounded-lg hover:bg-celeste-light transition-colors w-full justify-between">
+                                          logout</button>
+                              </li>
+
+                              }
+                        </ul>
+
+
+                  </div>
+            </div>
+
       </div>
 
 

@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 
 import com.ansbeno.books_service.SecurityProperties;
+import com.ansbeno.books_service.domain.user.TokenType;
 import com.ansbeno.books_service.domain.user.UserEntity;
 
 import io.jsonwebtoken.Jwts;
@@ -35,6 +36,7 @@ public class JwtService {
       public String generateAccessToken(UserEntity user, Map<String, Object> extraClaims) {
             Date issueAt = new Date(System.currentTimeMillis());
             Date expiration = new Date(issueAt.getTime() + (properties.accessTokenExpirationMinutes() * 60 * 1000));
+
             return Jwts.builder()
                         .claims(extraClaims)
                         .subject(user.getUsername())
@@ -56,6 +58,7 @@ public class JwtService {
       public String generateRefreshToken(UserEntity user, Map<String, Object> extraClaims) {
             Date issueAt = new Date(System.currentTimeMillis());
             Date expiration = new Date(issueAt.getTime() + (properties.refreshTokenExpirationMinutes() * 60 * 1000));
+
             return Jwts.builder()
                         .claims(extraClaims)
                         .subject(user.getUsername())
@@ -72,6 +75,19 @@ public class JwtService {
                         .parseSignedClaims(jwt)
                         .getPayload()
                         .getSubject();
+      }
+
+      public boolean isTokenExpired(String jwt, TokenType type) {
+            SecretKey key = type == TokenType.REFRESH_TOKEN ? refreshKey : accessKey;
+
+            Date expirationDate = Jwts.parser()
+                        .verifyWith(key)
+                        .build()
+                        .parseSignedClaims(jwt)
+                        .getPayload()
+                        .getExpiration();
+
+            return expirationDate.before(new Date());
       }
 
 }

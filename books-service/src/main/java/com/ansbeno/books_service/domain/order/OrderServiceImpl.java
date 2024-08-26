@@ -33,17 +33,16 @@ public class OrderServiceImpl implements OrderService {
 
       private static final List<String> DELIVERY_ALLOWED_COUNTRIES = List.of("USA", "GERMANY", "UK");
 
-
       @Override
       public OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException {
             return orderRepository.findByUsernameAndOrderNumber(userName, orderNumber)
-                    .map(OrderMapper::mapToOrderDTO)
-                    .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
+                        .map(OrderMapper::mapToOrderDTO)
+                        .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
       }
 
       @Override
       public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request)
-              throws InvalidOrderException, BookNotFoundException {
+                  throws InvalidOrderException, BookNotFoundException {
 
             if (!canBeDelivered(request.deliveryAddress().country())) {
                   throw new InvalidOrderException("Delivery not allowed to this country");
@@ -53,17 +52,17 @@ public class OrderServiceImpl implements OrderService {
             OrderStatus orderStatus = determineOrderStatus(request);
 
             OrderEntity order = OrderEntity.builder()
-                    .orderNumber(generateOrderNumber())
-                    .username(userName)
-                    .status(orderStatus)
-                    .deliveryAddress(request.deliveryAddress())
-                    .customer(request.customer())
-                    .createdAt(LocalDateTime.now())
-                    .build();
+                        .orderNumber(generateOrderNumber())
+                        .username(userName)
+                        .status(orderStatus)
+                        .deliveryAddress(request.deliveryAddress())
+                        .customer(request.customer())
+                        .createdAt(LocalDateTime.now())
+                        .build();
 
             Set<OrderItem> orderItems = request.items().stream()
-                    .map(item -> OrderItemMapper.mapToOrderItemEntity(item, order))
-                    .collect(Collectors.toSet());
+                        .map(item -> OrderItemMapper.mapToOrderItemEntity(item, order))
+                        .collect(Collectors.toSet());
 
             order.setItems(orderItems);
 
@@ -82,7 +81,8 @@ public class OrderServiceImpl implements OrderService {
       }
 
       private OrderStatus determineOrderStatus(CreateOrderRequestDTO request) {
-            return canBeDelivered(request.deliveryAddress().country()) ? OrderStatus.DELIVERY_IN_PROGRESS : OrderStatus.CANCELLED;
+            return canBeDelivered(request.deliveryAddress().country()) ? OrderStatus.DELIVERY_IN_PROGRESS
+                        : OrderStatus.CANCELLED;
       }
 
       @Override

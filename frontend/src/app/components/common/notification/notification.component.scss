@@ -12,15 +12,19 @@
   gap: 10px;
 
   .notification {
-    width: 250px;
-    padding: 15px;
+    max-width: 350px;
+    padding: 15px 5px;
     display: flex;
     align-items: center;
     justify-content: start;
     gap: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.5s, fadeOut 0.5s 4.75s;
+  }
+
+  span:nth-child(2) {
+    flex: 1;
   }
 }
 

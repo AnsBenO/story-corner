@@ -48,6 +48,11 @@ export const CartStore = signalStore(
           const updatedItems = [...currentItems, newItem];
           patchState(store, { items: updatedItems });
           notificationStore.notify('Item added to cart', NotificationType.INFO);
+        } else {
+          notificationStore.notify(
+            'Item already in your cart',
+            NotificationType.INFO
+          );
         }
         localStorage.setItem('cartItems', JSON.stringify(store.items()));
       },

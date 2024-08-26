@@ -1,10 +1,13 @@
 @if(notifications() !== []){
 <div class="notifications-container ">
       @for(notification of notifications(); track notification.id ){
-      @if(notification.message && notification.type){
+      @if(notification.message && notification.type && notification.id !== null && notification.id !== undefined){
 
       <div class="notification" [ngClass]="getNotificationClass(notification.type)">
-            <fa-icon class="text-2xl" [icon]="getIcon(notification.type)" />{{ notification.message }}
+            <fa-icon class="text-3xl" [icon]="getIcon(notification.type)" /> <span class="">
+                  {{ notification.message }}
+            </span> <fa-icon class="text-xl cursor-pointer mr-1" id="closeNotification"
+                  (click)="destroyNotification(notification.id)" [icon]="xMarkIcon" />
       </div>
       }
       }

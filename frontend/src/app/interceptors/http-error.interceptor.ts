@@ -1,65 +1,67 @@
-import {
-  HttpErrorResponse,
-  type HttpInterceptorFn,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import {
   NotificationStore,
   NotificationType,
 } from '../store/notification.store';
+
 import { ErrorResponse } from '../types/error-response.type';
 
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationStore = inject(NotificationStore);
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = '';
+      let errorMessage = 'An unexpected error occurred.';
+      const errorResponse = error.error as ErrorResponse;
 
       if (error.error instanceof ErrorEvent) {
-        errorMessage = 'An unexpected error occurred. Please try again later.';
+        // Client-side error (e.g., network issue)
+        console.error('Client-side error:', error.error.message);
+        errorMessage = error.error.message;
+        notificationStore.notify(errorMessage, NotificationType.ERROR);
       } else {
+        const errorMessageArray = Object.values(
+          (error.error as ErrorResponse).detail
+        );
+        // Server-side error
         switch (error.status) {
           case 400: {
-            const errorDetails = (error.error as ErrorResponse).detail.split(
-              '|'
-            );
-            notificationStore.notify(errorDetails, NotificationType.ERROR);
+            // Handle validation errors and other bad request scenarios
+            const errorsArray = Object.values(errorResponse.detail);
+            if (errorsArray.length > 0) {
+              notificationStore.notify(errorsArray, NotificationType.ERROR);
+            } else {
+              notificationStore.notify(errorMessage, NotificationType.ERROR);
+            }
             break;
           }
           case 401: {
-            errorMessage = 'Unauthorized. Please log in to continue.';
-            notificationStore.notify(errorMessage, NotificationType.ERROR);
             break;
           }
-          case 403: {
-            errorMessage =
-              'Forbidden. You do not have permission to perform this action.';
-            notificationStore.notify(errorMessage, NotificationType.ERROR);
-            break;
-          }
+
           case 404: {
-            errorMessage = 'Not Found. The requested resource was not found.';
-            notificationStore.notify(errorMessage, NotificationType.ERROR);
+            // Handle resource not found
+
+            notificationStore.notify(errorMessageArray, NotificationType.ERROR);
             break;
           }
           case 500: {
-            errorMessage = 'Internal Server Error. Please try again later.';
-            notificationStore.notify(errorMessage, NotificationType.ERROR);
+            notificationStore.notify(errorMessageArray, NotificationType.ERROR);
             break;
           }
           default: {
-            errorMessage =
-              'An unexpected error occurred. Please try again later.';
-            notificationStore.notify(errorMessage, NotificationType.ERROR);
-            break;
+            // Handle other unexpected server errors
+
+            notificationStore.notify(errorMessageArray, NotificationType.ERROR);
+            console.error('Unexpected error status:', error.status);
           }
         }
       }
 
-      console.error(`Error Code: ${error.status}\nMessage: ${errorMessage}`);
-
-      return throwError(() => new Error(errorMessage || 'An error occurred'));
+      // Return the error to be handled by the component or other interceptors
+      return throwError(() => error);
     })
   );
 };

@@ -78,9 +78,9 @@ export class CheckoutComponent implements OnInit {
           .submitOrder(NewOrderPayload)
           .pipe(takeUntilDestroyed(this.destroy))
           .subscribe({
-            next: (response) => {
+            next: (_response) => {
               this.notificationStore.notify(
-                `order created with number ${response.orderNumber}`,
+                `order created successfully`,
                 NotificationType.SUCCESS
               );
             },

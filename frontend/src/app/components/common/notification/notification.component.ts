@@ -19,6 +19,7 @@ import {
   faCircleCheck,
   faCircleXmark,
   faInfoCircle,
+  faXmark,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -41,6 +42,7 @@ export class NotificationComponent implements OnInit {
   message: WritableSignal<string | null> = signal(null);
   notifications: WritableSignal<TNotification[]> = signal([]);
   infoIcon = faInfoCircle;
+  xMarkIcon = faXmark;
   circleXmarkIcon = faCircleXmark;
   circleCheckIcon = faCircleCheck;
   private nextId = 0;
@@ -88,5 +90,8 @@ export class NotificationComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+  destroyNotification(id: number): void {
+    this.notifications.set(this.notifications().filter((n) => n.id !== id));
   }
 }

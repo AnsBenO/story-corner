@@ -26,9 +26,9 @@ export const NotificationStore = signalStore(
         const notification = { message, type };
         patchState(store, { notification });
       } else {
-        message.forEach((msg) => {
+        message.forEach((msg, index) => {
           const notification: TNotification = { message: msg, type };
-          setTimeout(() => patchState(store, { notification }), 500);
+          setTimeout(() => patchState(store, { notification }), 500 * index);
         });
       }
     },

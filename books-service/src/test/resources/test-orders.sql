@@ -29,7 +29,8 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 ;
 
 -- Clear out any existing test data to avoid conflicts
-DELETE FROM users WHERE username = 'testuser';
+DELETE FROM tokens;
+DELETE FROM users ;
 
 -- Now proceed with the insert, including created_at and updated_at fields
 INSERT INTO users (username, first_name, last_name, password, email, phone, role, country, created_at, updated_at)

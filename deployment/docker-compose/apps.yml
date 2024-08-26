@@ -1,4 +1,4 @@
-name: "book-store-app"
+name: "story-corner-app"
 services:
     books-service:
         image: ansbeno/story-corner-service

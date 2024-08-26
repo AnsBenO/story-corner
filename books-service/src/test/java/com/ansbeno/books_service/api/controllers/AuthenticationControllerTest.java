@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ansbeno.books_service.AbstractIntegrationTest;
 import com.ansbeno.books_service.domain.user.Role;
+
+import com.ansbeno.books_service.domain.user.TokenRepository;
 import com.ansbeno.books_service.domain.user.UserEntity;
 import com.ansbeno.books_service.domain.user.UserRepository;
 import com.ansbeno.books_service.security.authentication.AuthenticationResponse;
@@ -29,6 +31,9 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
         @Autowired
         PasswordEncoder passwordEncoder;
+
+        @Autowired
+        TokenRepository tokenRepository;
 
         @Nested
         class LoginTests {
@@ -53,7 +58,6 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .as(AuthenticationResponse.class);
 
                         assertThat(response.accessToken()).isNotNull();
-                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("testuser");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");
@@ -147,7 +151,6 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .as(AuthenticationResponse.class);
 
                         assertThat(response.accessToken()).isNotNull();
-                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("newuser");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");
@@ -206,9 +209,8 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 void shouldRefreshTokenSuccessfully() {
                         createTestUser("testuser3");
 
-                        var loginPayload = new AuthenticationRequest(
-                                        "testuser3",
-                                        "testpassword");
+                        // Perform login and capture the refresh token from the cookie
+                        var loginPayload = new AuthenticationRequest("testuser3", "testpassword");
 
                         var loginResponse = given()
                                         .contentType(ContentType.JSON)
@@ -218,13 +220,12 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
                                         .extract()
-                                        .as(AuthenticationResponse.class);
+                                        .cookie("refreshToken"); // Extract the refresh token from the cookie
 
-                        var refreshToken = loginResponse.refreshToken();
-
+                        // Perform the refresh token request using the captured cookie
                         var response = given()
                                         .contentType(ContentType.JSON)
-                                        .body(refreshToken)
+                                        .cookie("refreshToken", loginResponse) // Set the refresh token cookie
                                         .when()
                                         .post("/api/auth/refresh-token")
                                         .then()
@@ -232,14 +233,94 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .extract()
                                         .as(AuthenticationResponse.class);
 
+                        // Assert that the new access token is not null and user details are correct
                         assertThat(response.accessToken()).isNotNull();
-                        assertThat(response.refreshToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("testuser3");
                         assertThat(response.user().firstName()).isEqualTo("John");
                         assertThat(response.user().lastName()).isEqualTo("Doe");
                         assertThat(response.user().email()).isEqualTo("testuser3@test.com");
                         assertThat(response.user().phone()).isEqualTo("0634256790");
 
+                }
+
+                @Test
+                void shouldRevocateRefreshTokenAfterThreeUses() {
+                        createTestUser("testuser4");
+
+                        var loginPayload = new AuthenticationRequest("testuser4", "testpassword");
+
+                        var loginResponse = given()
+                                        .contentType(ContentType.JSON)
+                                        .body(loginPayload)
+                                        .when()
+                                        .post("/api/auth/login")
+                                        .then()
+                                        .statusCode(HttpStatus.OK.value())
+                                        .extract()
+                                        .cookie("refreshToken"); // Extract the refresh token from the cookie
+
+                        // Refresh token for the first three times
+                        for (int i = 1; i <= 3; i++) {
+                                given()
+                                                .contentType(ContentType.JSON)
+                                                .cookie("refreshToken", loginResponse) // Set the refresh token cookie
+                                                .when()
+                                                .post("/api/auth/refresh-token")
+                                                .then()
+                                                .statusCode(HttpStatus.OK.value());
+                        }
+
+                        // Fourth attempt should fail because the refresh token should be revoked
+                        given()
+                                        .contentType(ContentType.JSON)
+                                        .cookie("refreshToken", loginResponse) // Set the refresh token cookie
+                                        .when()
+                                        .post("/api/auth/refresh-token")
+                                        .then()
+                                        .statusCode(HttpStatus.UNAUTHORIZED.value());
+
+                }
+        }
+
+        @Nested
+        class LogoutTests {
+                @Test
+                void shouldLogoutSuccessfully() {
+                        // Create and log in a test user
+                        createTestUser("logoutuser");
+
+                        var loginPayload = new AuthenticationRequest("logoutuser", "testpassword");
+
+                        var loginResponse = given()
+                                        .contentType(ContentType.JSON)
+                                        .body(loginPayload)
+                                        .when()
+                                        .post("/api/auth/login")
+                                        .then()
+                                        .statusCode(HttpStatus.OK.value())
+                                        .extract();
+
+                        String accessToken = loginResponse.path("accessToken");
+                        String refreshToken = loginResponse.cookie("refreshToken");
+
+                        // Perform the logout operation
+                        given()
+                                        .contentType(ContentType.JSON)
+                                        .header("Authorization", "Bearer " + accessToken)
+                                        .cookie("refreshToken", refreshToken)
+                                        .when()
+                                        .post("/api/auth/logout")
+                                        .then()
+                                        .statusCode(HttpStatus.OK.value())
+                                        .extract()
+                                        .response();
+
+                        // Verify that both the access token and refresh token are revoked
+                        boolean isAccessTokenRevoked = tokenRepository.existsByTokenAndRevoked(accessToken, true);
+                        boolean isRefreshTokenRevoked = tokenRepository.existsByTokenAndRevoked(refreshToken, true);
+
+                        assertThat(isAccessTokenRevoked).isTrue();
+                        assertThat(isRefreshTokenRevoked).isTrue();
                 }
         }
 
@@ -255,4 +336,5 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 user.setCountry("USA");
                 userRepository.save(user);
         }
+
 }

@@ -80,12 +80,12 @@ export class CartComponent {
   @HostListener('document:touchstart', ['$event'])
   handleOutsideClick(event: Event) {
     const cartDiv = document.querySelector('#cartDiv');
-    const closeButton = document.querySelector('#closeCart');
+    const outside = document.querySelector('#outside');
 
     if (
       cartDiv &&
       !cartDiv.contains(event.target as Node) &&
-      !closeButton?.contains(event.target as Node)
+      outside?.contains(event.target as Node)
     ) {
       this.closeCart();
     }

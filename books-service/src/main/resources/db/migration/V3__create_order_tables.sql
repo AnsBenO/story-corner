@@ -19,7 +19,8 @@ CREATE TABLE orders
     comments                  text,
     created_at                TIMESTAMP,
     updated_at                TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT status_check CHECK (status IN ('NEW', 'IN_PROCESS', 'DELIVERY_IN_PROGRESS', 'DELIVERED', 'CANCELLED', 'ERROR'))
 );
 
 CREATE TABLE order_items (

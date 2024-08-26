@@ -1,3 +1,40 @@
 :host {
   display: block;
 }
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 10px solid;
+  box-sizing: border-box;
+  animation: animate-loader 0.5s linear infinite;
+}
+
+@keyframes animate-loader {
+  0% {
+    border-color: #5f5f7a rgba(136, 138, 190, 0) rgba(136, 138, 190, 0)
+      rgba(136, 138, 190, 0); /* Dark cool gray */
+  }
+  33% {
+    border-color: #5f5f7a #888abe rgba(136, 138, 190, 0) rgba(136, 138, 190, 0); /* Dark and default cool gray */
+  }
+  66% {
+    border-color: #5f5f7a #888abe #b0b3c1 rgba(136, 138, 190, 0); /* Dark, default, and light cool gray */
+  }
+  100% {
+    border-color: #5f5f7a #888abe #b0b3c1 #b0b3c1; /* Dark, default, and light cool gray with white */
+  }
+}
+.loader-container {
+  display: flex;
+  z-index: 100;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0.301);
+  backdrop-filter: blur(10px);
+}

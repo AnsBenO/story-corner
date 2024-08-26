@@ -14,6 +14,6 @@ class WebMvcConfig implements WebMvcConfigurer {
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowedOriginPatterns("*")
-                        .allowCredentials(false);
+                        .allowCredentials(true);
       }
 }

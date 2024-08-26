@@ -1,6 +1,8 @@
 package com.ansbeno.books_service.security.authentication;
 
-public record AuthenticationResponse(
+public record AuthenticationDto(
             String accessToken,
+            String refreshToken,
             CurrentUserResponseDto user) {
+
 }

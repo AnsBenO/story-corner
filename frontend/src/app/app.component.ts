@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { LoaderComponent } from './components/common/loader/loader.component';
 import { NavigationComponent } from './components/common/navigation/navigation.component';
 
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
 import { NotificationComponent } from './components/common/notification/notification.component';
+import { AuthService } from './services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +22,17 @@ import { NotificationComponent } from './components/common/notification/notifica
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  authService = inject(AuthService);
+  destroy = inject(DestroyRef);
   title = 'book store';
   router = inject(Router);
+  ngOnInit(): void {
+    if (localStorage.getItem('accessToken')) {
+      this.authService
+        .getCurrentUser()
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe();
+    }
+  }
 }

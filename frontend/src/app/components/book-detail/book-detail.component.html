@@ -1,6 +1,6 @@
-<div class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0"
+<div id="outside" class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0"
       [ngClass]="{'parent-fade-in':!closingModal(), 'parent-fade-out':closingModal()}">
-      <div id="modalDiv" class="relative w-full max-w-4xl bg-slate-100 rounded-lg overflow-scroll md:max-h-[470px]"
+      <div id="modalDiv" class="relative overflow-scroll w-full max-w-4xl bg-slate-100 rounded-lg md:max-h-[470px]"
             [ngClass]="{'fade-in':!closingModal(), 'fade-out':closingModal()}">
             <fa-icon id="closeModal" [icon]="xMark"
                   class="absolute top-0 right-2 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"

@@ -40,4 +40,11 @@ export const routes: Routes = [
       ),
     canActivate: [checkoutGuard],
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./components/common/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+  },
 ];

@@ -37,8 +37,8 @@ export class OrderService {
     return this.http
       .post<NewOrderResponse>(`${environment.API_URL}/orders`, order)
       .pipe(
-        tap((response) => {
-          const message = `Order submitted successfully! Your order number is ${response.orderNumber}.`;
+        tap((_response) => {
+          const message = `Order submitted successfully!`;
           this.notificationStore.notify(message, NotificationType.SUCCESS);
         })
       );

@@ -1,4 +1,4 @@
-name: "book-store-app"
+name: "story-corner-app"
 services:
     books-db:
         image: postgres:16-alpine

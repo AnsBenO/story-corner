@@ -46,12 +46,12 @@ export class BookDetailComponent {
   @HostListener('document:touchstart', ['$event'])
   handleOutsideClick(event: Event) {
     const modalDiv = document.querySelector('#modalDiv');
-    const closeButton = document.querySelector('#closeModal');
+    const outside = document.querySelector('#outside');
 
     if (
       modalDiv &&
       !modalDiv.contains(event.target as Node) &&
-      !closeButton?.contains(event.target as Node)
+      outside?.contains(event.target as Node)
     ) {
       this.closeModal();
     }

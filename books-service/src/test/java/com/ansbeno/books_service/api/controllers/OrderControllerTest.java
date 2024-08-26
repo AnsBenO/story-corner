@@ -162,7 +162,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
                     .statusCode(404)
                     .body("status", is(404))
                     .body("title", is("Order Not Found"))
-                    .body("detail", is("Order with Number " + number + " Not Found"));
+                    .body("detail.message", is("Order with Number " + number + " Not Found"));
         }
     }
 
