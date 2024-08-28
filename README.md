@@ -1,4 +1,4 @@
-# Stort Corner
+# Story Corner
 
 Stort Corner is a full-stack web application designed to provide a seamless experience for browsing and purchasing books. The frontend is built using Angular with Tailwind CSS for styling, while the backend is powered by Spring Boot with PostgreSQL as the database.
 
