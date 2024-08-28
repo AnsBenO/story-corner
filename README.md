@@ -1,6 +1,6 @@
 # Story Corner
 
-Stort Corner is a full-stack web application designed to provide a seamless experience for browsing and purchasing books. The frontend is built using Angular with Tailwind CSS for styling, while the backend is powered by Spring Boot with PostgreSQL as the database.
+Story Corner is a full-stack web application designed to provide a seamless experience for browsing and purchasing books. The frontend is built using Angular with Tailwind CSS for styling, while the backend is powered by Spring Boot with PostgreSQL as the database.
 
 ## Frontend
 
@@ -17,10 +17,10 @@ Stort Corner is a full-stack web application designed to provide a seamless expe
   - Prevent authenticated users from accessing login or signup pages.
 - **Reactive Forms**: Used for handling login, signup, and checkout processes, providing a robust and reactive way to handle form data.
 - **Global State Management**: 
-  - **Notifications**: Managed globally to ensure consistent user messaging.
+  - **Notifications**: Managed globally to notify the user about on going processes.
   - **Cart Management**: Users can add books to their cart before authentication. Cart state is preserved across different parts of the application.
 - **JWT Refresh Token Mechanism**: 
-  - Reading expiration dates from JWT access tokens.
+  - Reading expiration dates from JWT access tokens and setting a timeout for refreshing the access token.
   - Sending refresh token requests using HTTP-only cookies.
 
 ## Backend
@@ -42,3 +42,14 @@ Stort Corner is a full-stack web application designed to provide a seamless expe
 ### Security
 - **JWT Token Revocation**: Tokens are revoked when a user logs out, or when a refresh token is used more than three times.
 - **Database Security**: Sensitive information, including JWT tokens, is securely stored in PostgreSQL.
+
+## CI/CD Workflow
+### Containerization
+- **Backendr**: The Spring Boot application is containerized using the `dashaun/builder` image, which simplifies the build and deployment process.
+- **Frontend**: Containerizing an Angular application with Docker witch involved creating a Dockerfile that builds the Angular app, packages it, and serves Nginx.
+  
+### GitHub Actions
+- **Build and Publish Docker Images**: A GitHub Actions workflow is configured to automate the build process for both the frontend and backend.
+  - **Frontend**: The workflow uses the Dockerfile to build the Angular application into a Docker image.
+  - **Backend**: The Spring Boot application is built and containerized using the `dashaun/builder` image.
+  - **Docker Hub Integration**: The workflow automatically publishes the built images to Docker Hub.
