@@ -11,7 +11,7 @@ Story Corner is a full-stack web application designed to provide a seamless expe
 
 ### Key Features
 - **Standalone Components**: Modular and reusable components designed to enhance maintainability and scalability.
-- **Lazy Loading Routes**: Efficient loading of modules to improve application performance.
+- **Lazy Loading Routes**: Efficient loading of different parts of the application to improve application performance.
 - **Route Guards**: 
   - Prevent unauthorized users from submitting orders.
   - Prevent authenticated users from accessing login or signup pages.
