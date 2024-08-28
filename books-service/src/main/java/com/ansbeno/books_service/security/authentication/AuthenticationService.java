@@ -35,7 +35,7 @@ public class AuthenticationService {
       private final BCryptPasswordEncoder encoder;
       private final TokenRepository tokenRepository;
 
-      public AuthenticationDto login(AuthenticationRequest request) {
+      public AuthenticationDto login(AuthenticationRequestDto request) {
 
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                         request.username(),

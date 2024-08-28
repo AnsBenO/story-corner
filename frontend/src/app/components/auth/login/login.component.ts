@@ -21,7 +21,7 @@ import {
   standalone: true,
   imports: [CommonModule, RouterModule, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../auth.scss'],
+  styleUrl: '../auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {

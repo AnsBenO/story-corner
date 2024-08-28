@@ -1,5 +1,5 @@
 import { BookCartItem } from './book-cart-item.type';
-import { Customer, DeliveryAddress } from './customer.type';
+import { Customer, DeliveryAddress } from './new-order-payload.type';
 
 export interface OrderResponse {
   orderNumber: string;

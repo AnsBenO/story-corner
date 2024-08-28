@@ -66,7 +66,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
                         "customer": {
                             "username": "Hello_Geoe",
                             "email": "ans@email.com",
-                            "phone": "999999999"
+                            "phone": "0999999993"
                         },
                         "deliveryAddress": {
                             "addressLine1": "Tetuan",

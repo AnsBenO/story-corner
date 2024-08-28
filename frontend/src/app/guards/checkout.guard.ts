@@ -7,7 +7,7 @@ import {
   NotificationType,
 } from '../store/notification.store';
 
-export const checkoutGuard: CanActivateFn = (route, state) => {
+export const checkoutGuard: CanActivateFn = (_route, _state) => {
   const cartStore = inject(CartStore);
   const authService = inject(AuthService);
   const notificationStore = inject(NotificationStore);

@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
-import com.ansbeno.books_service.security.authentication.AuthenticationRequest;
+import com.ansbeno.books_service.security.authentication.AuthenticationRequestDto;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -18,7 +18,7 @@ import com.ansbeno.books_service.domain.user.Role;
 import com.ansbeno.books_service.domain.user.TokenRepository;
 import com.ansbeno.books_service.domain.user.UserEntity;
 import com.ansbeno.books_service.domain.user.UserRepository;
-import com.ansbeno.books_service.security.authentication.AuthenticationResponse;
+import com.ansbeno.books_service.security.authentication.AuthenticationResponseDto;
 import com.ansbeno.books_service.security.authentication.CurrentUserResponseDto;
 import com.ansbeno.books_service.security.authentication.RegisterUserDto;
 
@@ -42,7 +42,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
                         createTestUser("testuser");
 
-                        var payload = new AuthenticationRequest(
+                        var payload = new AuthenticationRequestDto(
                                         "testuser",
                                         "testpassword");
 
@@ -55,7 +55,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .statusCode(HttpStatus.OK.value())
                                         .body("accessToken", notNullValue())
                                         .extract()
-                                        .as(AuthenticationResponse.class);
+                                        .as(AuthenticationResponseDto.class);
 
                         assertThat(response.accessToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("testuser");
@@ -69,7 +69,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 @Test
                 void shouldReturnUnauthorizedForInvalidCredentials() {
 
-                        var payload = new AuthenticationRequest(
+                        var payload = new AuthenticationRequestDto(
                                         "wronguser",
                                         "wrongpassword");
 
@@ -90,7 +90,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
                         createTestUser("testuser2");
 
-                        var loginPayload = new AuthenticationRequest(
+                        var loginPayload = new AuthenticationRequestDto(
                                         "testuser2",
                                         "testpassword");
 
@@ -102,7 +102,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
                                         .extract()
-                                        .as(AuthenticationResponse.class);
+                                        .as(AuthenticationResponseDto.class);
 
                         // Use the token to get the current user details
                         var token = loginResponse.accessToken();
@@ -148,7 +148,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .statusCode(HttpStatus.OK.value())
                                         .body("accessToken", notNullValue())
                                         .extract()
-                                        .as(AuthenticationResponse.class);
+                                        .as(AuthenticationResponseDto.class);
 
                         assertThat(response.accessToken()).isNotNull();
                         assertThat(response.user().username()).isEqualTo("newuser");
@@ -210,7 +210,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                         createTestUser("testuser3");
 
                         // Perform login and capture the refresh token from the cookie
-                        var loginPayload = new AuthenticationRequest("testuser3", "testpassword");
+                        var loginPayload = new AuthenticationRequestDto("testuser3", "testpassword");
 
                         var loginResponse = given()
                                         .contentType(ContentType.JSON)
@@ -231,7 +231,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                                         .then()
                                         .statusCode(HttpStatus.OK.value())
                                         .extract()
-                                        .as(AuthenticationResponse.class);
+                                        .as(AuthenticationResponseDto.class);
 
                         // Assert that the new access token is not null and user details are correct
                         assertThat(response.accessToken()).isNotNull();
@@ -247,7 +247,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                 void shouldRevocateRefreshTokenAfterThreeUses() {
                         createTestUser("testuser4");
 
-                        var loginPayload = new AuthenticationRequest("testuser4", "testpassword");
+                        var loginPayload = new AuthenticationRequestDto("testuser4", "testpassword");
 
                         var loginResponse = given()
                                         .contentType(ContentType.JSON)
@@ -289,7 +289,7 @@ public class AuthenticationControllerTest extends AbstractIntegrationTest {
                         // Create and log in a test user
                         createTestUser("logoutuser");
 
-                        var loginPayload = new AuthenticationRequest("logoutuser", "testpassword");
+                        var loginPayload = new AuthenticationRequestDto("logoutuser", "testpassword");
 
                         var loginResponse = given()
                                         .contentType(ContentType.JSON)

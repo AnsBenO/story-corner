@@ -2,7 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { CurrentUser } from '../types/current-user.type';
 import { LoginPayload } from '../types/login-payload.type';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, take, tap, throwError } from 'rxjs';
+import { catchError, firstValueFrom, Observable, of, take, tap } from 'rxjs';
 import { AuthResponse } from '../types/auth-response.type';
 import { environment } from '../../environments/environment';
 import { RegisterPayload } from '../types/register-payload';
@@ -24,6 +24,13 @@ export class AuthService {
   notificationStore = inject(NotificationStore);
 
   private refreshTokenTimeout!: ReturnType<typeof setTimeout>;
+
+  initializeUser(): Promise<unknown> {
+    if (localStorage.getItem('accessToken')) {
+      return firstValueFrom(this.getCurrentUser());
+    }
+    return Promise.resolve();
+  }
 
   constructor() {}
   login(formData: LoginPayload): Observable<AuthResponse> {
@@ -106,7 +113,7 @@ export class AuthService {
 
       const timeout = expires.getTime() - Date.now();
 
-      console.log('refresh timer started, timeout: ', timeout);
+      console.log('refresh timer started, timeout: ', timeout - 60000);
 
       // refresh token if it is near expiration
       if (timeout < 60000) {
@@ -125,11 +132,8 @@ export class AuthService {
     return this.http.get<CurrentUser>(`${environment.API_URL}/auth/user`).pipe(
       tap((response) => {
         this.currentUser.set(response);
-        this.refreshToken()
-          .pipe(take(1))
-          .subscribe(() => {
-            this.startRefreshTimer();
-          });
+
+        this.startRefreshTimer();
       })
     );
   }

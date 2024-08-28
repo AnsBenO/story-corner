@@ -66,12 +66,14 @@ export const CartStore = signalStore(
         );
       },
       removeAll() {
-        patchState(store, { items: [] });
-        localStorage.setItem('cartItems', JSON.stringify([]));
-        notificationStore.notify(
-          'Removed all items from cart',
-          NotificationType.INFO
-        );
+        if (store.items().length > 0) {
+          patchState(store, { items: [] });
+          localStorage.setItem('cartItems', JSON.stringify([]));
+          notificationStore.notify(
+            'Removed all items from cart',
+            NotificationType.INFO
+          );
+        }
       },
       increaseQuantity(code: string) {
         const updatedItems = store

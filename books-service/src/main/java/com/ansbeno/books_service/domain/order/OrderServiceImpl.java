@@ -2,9 +2,9 @@ package com.ansbeno.books_service.domain.order;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,33 +30,41 @@ public class OrderServiceImpl implements OrderService {
 
       private final OrderRepository orderRepository;
       private final OrderValidator orderValidator;
+      // private final OrderStatusNotificationService notificationService;
 
       private static final List<String> DELIVERY_ALLOWED_COUNTRIES = List.of("USA", "GERMANY", "UK");
 
       @Override
       public OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException {
-            return orderRepository.findByUsernameAndOrderNumber(userName, orderNumber)
-                        .map(OrderMapper::mapToOrderDTO)
-                        .orElseThrow(() -> OrderNotFoundException.forOrderNumber(orderNumber));
+            Optional<OrderEntity> orderOptional = orderRepository.findByUsernameAndOrderNumber(userName, orderNumber);
+            if (orderOptional.isPresent()) {
+                  OrderEntity order = orderOptional.get();
+                  return OrderMapper.mapToOrderDTO(order);
+            }
+            throw OrderNotFoundException.forOrderNumber(orderNumber);
       }
 
       @Override
-      public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request)
-                  throws InvalidOrderException, BookNotFoundException {
+      public List<OrderSummary> findOrders(String username) {
+            return orderRepository.findByUsername(username);
+      }
 
-            if (!canBeDelivered(request.deliveryAddress().country())) {
-                  throw new InvalidOrderException("Delivery not allowed to this country");
+      @Override
+      public CreateOrderResponseDTO createNewOrder(String userName, CreateOrderRequestDTO request) {
+
+            try {
+                  orderValidator.validate(request);
+            } catch (BookNotFoundException | InvalidOrderException e) {
+                  log.error("Order validation failed for user {}: {}", userName, e.getMessage());
+                  throw new InvalidOrderException(e.getMessage());
             }
-            orderValidator.validate(request);
-
-            OrderStatus orderStatus = determineOrderStatus(request);
 
             OrderEntity order = OrderEntity.builder()
                         .orderNumber(generateOrderNumber())
                         .username(userName)
-                        .status(orderStatus)
+                        .status(OrderStatus.NEW)
                         .deliveryAddress(request.deliveryAddress())
-                        .customer(request.customer())
+                        .customer(new Customer(userName, userName, userName))
                         .createdAt(LocalDateTime.now())
                         .build();
 
@@ -69,24 +77,44 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(order);
             log.info("Created new order {} for user {}", order.getOrderNumber(), userName);
 
+            // Process the order immediately
+            process(order);
+
             return new CreateOrderResponseDTO(order.getOrderNumber());
       }
 
-      private boolean canBeDelivered(String country) {
-            return DELIVERY_ALLOWED_COUNTRIES.contains(country.toUpperCase());
+      private void process(OrderEntity order) {
+            if (!canBeDelivered(order)) {
+                  log.warn("Order {} cannot be delivered to {}", order.getOrderNumber(),
+                              order.getDeliveryAddress().country());
+                  orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
+                  // notificationService.notifyOrderStatus(order.getUsername(),
+                  // order.getOrderNumber(), OrderStatus.CANCELLED);
+                  return;
+            }
+
+            log.info("Processing payment for order {}", order.getOrderNumber());
+            // Add payment processing logic here
+            boolean paymentSuccessful = true; // Assume payment is successful
+
+            if (paymentSuccessful) {
+                  log.info("Order {} has been successfully processed", order.getOrderNumber());
+                  orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
+                  // notificationService.notifyOrderStatus(order.getUsername(),
+                  // order.getOrderNumber(), OrderStatus.DELIVERY_IN_PROGRESS);
+            } else {
+                  orderRepository.updateOrderStatus(order.getOrderNumber(), OrderStatus.CANCELLED);
+                  // notificationService.notifyOrderStatus(order.getUsername(),
+                  // order.getOrderNumber(), OrderStatus.CANCELLED);
+            }
+      }
+
+      private boolean canBeDelivered(OrderEntity order) {
+            return DELIVERY_ALLOWED_COUNTRIES.contains(
+                        order.getDeliveryAddress().country().toUpperCase());
       }
 
       private String generateOrderNumber() {
-            return UUID.randomUUID().toString();
-      }
-
-      private OrderStatus determineOrderStatus(CreateOrderRequestDTO request) {
-            return canBeDelivered(request.deliveryAddress().country()) ? OrderStatus.DELIVERY_IN_PROGRESS
-                        : OrderStatus.CANCELLED;
-      }
-
-      @Override
-      public List<OrderSummary> findOrders(String username) {
-            return orderRepository.findByUsername(username);
+            return "ORD-" + System.currentTimeMillis();
       }
 }

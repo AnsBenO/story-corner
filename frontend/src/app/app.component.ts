@@ -6,7 +6,6 @@ import { NavigationComponent } from './components/common/navigation/navigation.c
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
 import { NotificationComponent } from './components/common/notification/notification.component';
 import { AuthService } from './services/auth.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -22,17 +21,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   authService = inject(AuthService);
   destroy = inject(DestroyRef);
   title = 'book store';
   router = inject(Router);
-  ngOnInit(): void {
-    if (localStorage.getItem('accessToken')) {
-      this.authService
-        .getCurrentUser()
-        .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe();
-    }
-  }
 }

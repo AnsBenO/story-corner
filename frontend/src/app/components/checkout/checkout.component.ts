@@ -59,7 +59,11 @@ export class CheckoutComponent implements OnInit {
   submitOrder() {
     const currentUser = this.authService.currentUser();
     if (currentUser !== null && currentUser !== undefined) {
-      const items = this.cartStore.items();
+      const items = this.cartStore.items().map((item) => ({ ...item }));
+
+      items.forEach((i) => {
+        delete i.imageUrl;
+      });
       items.forEach((i) => {
         delete i.imageUrl;
       });
@@ -79,6 +83,7 @@ export class CheckoutComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroy))
           .subscribe({
             next: (_response) => {
+              this.router.navigateByUrl('/');
               this.notificationStore.notify(
                 `order created successfully`,
                 NotificationType.SUCCESS
@@ -87,5 +92,18 @@ export class CheckoutComponent implements OnInit {
           });
       }
     }
+  }
+  public isInvalidInput(inputName: string): boolean {
+    return !!(
+      this.checkoutForm.get(inputName)?.invalid &&
+      this.isDirtyAndTouched(inputName)
+    );
+  }
+
+  public isDirtyAndTouched(inputName: string): boolean {
+    return !!(
+      this.checkoutForm.get(inputName)?.dirty &&
+      this.checkoutForm.get(inputName)?.touched
+    );
   }
 }

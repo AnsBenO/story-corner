@@ -16,10 +16,11 @@
                                           <input id="addressLine1" type="text" formControlName="addressLine1"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your address" />
-                                          <div
-                                                *ngIf="checkoutForm.get('deliveryAddress.addressLine1')?.invalid && checkoutForm.get('deliveryAddress.addressLine1')?.touched">
+                                          @if (isInvalidInput('addressLine1')) {
+                                          <div *ngIf="checkoutForm.get('addressLine1')?.invalid ">
                                                 <small class="text-red-500">Address Line 1 is required.</small>
                                           </div>
+                                          }
                                     </div>
 
                                     <!-- Address Line 2 -->
@@ -29,6 +30,11 @@
                                           <input id="addressLine2" type="text" formControlName="addressLine2"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your address (optional)" />
+                                          @if (isInvalidInput('addressLine2')) {
+                                          <div *ngIf="checkoutForm.get('addressLine2')?.invalid">
+                                                <small class="text-red-500">addressLine2 is required.</small>
+                                          </div>
+                                          }
                                     </div>
 
                                     <!-- City -->
@@ -37,10 +43,11 @@
                                           <input id="city" type="text" formControlName="city"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your city" />
-                                          <div
-                                                *ngIf="checkoutForm.get('deliveryAddress.city')?.invalid && checkoutForm.get('deliveryAddress.city')?.touched">
+                                          @if (isInvalidInput('city')) {
+                                          <div *ngIf="checkoutForm.get('city')?.invalid">
                                                 <small class="text-red-500">City is required.</small>
                                           </div>
+                                          }
                                     </div>
 
                                     <!-- State -->
@@ -49,10 +56,11 @@
                                           <input id="state" type="text" formControlName="state"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your state" />
-                                          <div
-                                                *ngIf="checkoutForm.get('deliveryAddress.state')?.invalid && checkoutForm.get('deliveryAddress.state')?.touched">
+                                          @if (isInvalidInput('state')) {
+                                          <div *ngIf="checkoutForm.get('state')?.invalid">
                                                 <small class="text-red-500">State is required.</small>
                                           </div>
+                                          }
                                     </div>
 
                                     <!-- Zip Code -->
@@ -61,10 +69,11 @@
                                           <input id="zipCode" type="text" formControlName="zipCode"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your zip code" />
-                                          <div
-                                                *ngIf="checkoutForm.get('deliveryAddress.zipCode')?.invalid && checkoutForm.get('deliveryAddress.zipCode')?.touched">
+                                          @if (isInvalidInput('zipCode')) {
+                                          <div *ngIf="checkoutForm.get('zipCode')?.invalid">
                                                 <small class="text-red-500">Zip Code is required.</small>
                                           </div>
+                                          }
                                     </div>
 
                                     <!-- Country -->
@@ -73,14 +82,16 @@
                                           <input id="country" type="text" formControlName="country"
                                                 class="w-full px-4 py-2 border border-cool-gray-light rounded-lg text-night focus:ring-2 focus:ring-celeste-light outline-none"
                                                 placeholder="Enter your country" />
-                                          <div
-                                                *ngIf="checkoutForm.get('deliveryAddress.country')?.invalid && checkoutForm.get('deliveryAddress.country')?.touched">
+                                          @if (isInvalidInput('country')) {
+
+                                          <div *ngIf="checkoutForm.get('country')?.invalid">
                                                 <small class="text-red-500">Country is required.</small>
                                           </div>
+                                          }
                                     </div>
                               </div>
 
-                              <button type="submit"
+                              <button type="submit" [disabled]="checkoutForm.invalid"
                                     class="w-full py-3 mt-4 bg-night text-white rounded-lg hover:bg-night-dark focus:outline-none focus:ring-2 focus:ring-celeste-light">Submit
                                     Order</button>
                         </form>

@@ -26,22 +26,22 @@ public class AuthenticationController {
       private final SecurityProperties securityProperties;
 
       @PostMapping("/register")
-      ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterUserDto request,
+      ResponseEntity<AuthenticationResponseDto> register(@Valid @RequestBody RegisterUserDto request,
                   HttpServletResponse response) {
             AuthenticationDto auth = authenticationService.register(request);
             Cookie refreshTokenCookie = createRefreshTokenCookie(auth.refreshToken());
             response.addCookie(refreshTokenCookie);
-            AuthenticationResponse authResponse = new AuthenticationResponse(auth.accessToken(), auth.user());
+            AuthenticationResponseDto authResponse = new AuthenticationResponseDto(auth.accessToken(), auth.user());
             return ResponseEntity.ok(authResponse);
       }
 
       @PostMapping("/login")
-      ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request,
+      ResponseEntity<AuthenticationResponseDto> authenticate(@Valid @RequestBody AuthenticationRequestDto request,
                   HttpServletResponse response) {
             AuthenticationDto auth = authenticationService.login(request);
             Cookie refreshTokenCookie = createRefreshTokenCookie(auth.refreshToken());
             response.addCookie(refreshTokenCookie);
-            AuthenticationResponse authResponse = new AuthenticationResponse(auth.accessToken(), auth.user());
+            AuthenticationResponseDto authResponse = new AuthenticationResponseDto(auth.accessToken(), auth.user());
             return ResponseEntity.ok(authResponse);
       }
 
@@ -52,11 +52,11 @@ public class AuthenticationController {
       }
 
       @PostMapping("/refresh-token")
-      ResponseEntity<AuthenticationResponse> refreshToken(
+      ResponseEntity<AuthenticationResponseDto> refreshToken(
                   @CookieValue(value = "refreshToken", required = true) String refreshToken,
                   HttpServletResponse response) {
             AuthenticationDto auth = authenticationService.refreshToken(refreshToken);
-            AuthenticationResponse authResponse = new AuthenticationResponse(auth.accessToken(), auth.user());
+            AuthenticationResponseDto authResponse = new AuthenticationResponseDto(auth.accessToken(), auth.user());
             return ResponseEntity.ok(authResponse);
       }
 

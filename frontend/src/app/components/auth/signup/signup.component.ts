@@ -36,7 +36,7 @@ import { RegisterPayload } from '../../../types/register-payload';
     RouterModule,
   ],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss', '../auth.scss'],
+  styleUrl: '../auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupComponent {
