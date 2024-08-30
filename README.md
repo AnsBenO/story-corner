@@ -13,7 +13,10 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
 - **Lazy Loading Routes**: Efficient loading of different parts of the application to improve application performance.
 - **Route Guards**: 
   - Prevent unauthorized users from submitting orders.
-  - Prevent authenticated users from accessing login or signup pages.
+  - Prevent authenticated users from accessing login or signup pages. 
+- **Interceptors**:
+  - Handeling http errors
+  - Adding Authorization header with access token to outgoing requests. 
 - **Reactive Forms**: Used for handling login, signup, and checkout processes. 
 - **Global State Management**: 
   - **Notifications**: Managed globally to notify the user about on going processes.
