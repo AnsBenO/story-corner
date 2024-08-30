@@ -36,7 +36,9 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
   - **Token Storage in Database**: 
     - JWT tokens are stored in a dedicated database table.
     - Tokens are revoked upon logout.
-    - Refresh tokens have a usage limit (3 times) to prevent abuse.
+    - Refresh tokens have a usage limit (3 times) to prevent abuse. 
+- **Error Handeling with a Global Controller Adviser 
+    - Ensure that the error responses are consistent and well defined for easier integration with the frontend. 
   
 ### Security
 - **JWT Token Revocation**: Tokens are revoked when a user logs out, or when a refresh token is used more than three times.
