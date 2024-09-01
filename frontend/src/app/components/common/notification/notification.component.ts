@@ -71,7 +71,7 @@ export class NotificationComponent implements OnInit {
     this.notification$
       .pipe(
         takeUntilDestroyed(this.destroy),
-        filter((notification) => {
+        filter((notification): notification is TNotification => {
           return notification.message !== null && notification.type !== null;
         }),
         tap((notification) => {

@@ -50,11 +50,13 @@ export class AuthService {
   constructor() {
     this.user$
       .pipe(
-        filter((user) => user !== null && user !== undefined),
+        filter(
+          (user): user is CurrentUser => user !== null && user !== undefined
+        ),
         take(1)
       )
       .subscribe((user) => {
-        user && this.inboxService.initSocketConnection(user.username);
+        this.inboxService.initSocketConnection(user.username);
         this.inboxStore.getNewNotifications();
         this.inboxStore.getNotifications({});
       });
