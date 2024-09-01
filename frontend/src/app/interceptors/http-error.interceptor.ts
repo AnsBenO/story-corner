@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError, of } from 'rxjs';
 import {
   NotificationStore,
   NotificationType,
@@ -15,50 +15,74 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = 'An unexpected error occurred.';
-      const errorResponse = error.error as ErrorResponse;
+      // Handle network errors
+      if (error.status === 0) {
+        return handleNetworkError(error, notificationStore);
+      }
 
       // Handle session expiration
       if (error.url?.includes('/refresh-token')) {
-        notificationStore.notify(
-          'Your session has expired',
-          NotificationType.ERROR
-        );
-        authService.currentUser.set(null);
-        localStorage.removeItem('accessToken');
+        return handleSessionExpiration(notificationStore, authService);
       }
-
-      const shouldAttemptRefresh =
-        error.status === 401 &&
-        !['/login', '/logout', '/refresh-token'].some((url) =>
-          error.url?.includes(url)
-        );
-
-      const isForbiddenUserEndpoint =
-        error.status === 403 && error.url?.includes('/user');
 
       // Retry with refreshed token if applicable
-      if (shouldAttemptRefresh || isForbiddenUserEndpoint) {
-        return authService.refreshToken().pipe(
-          switchMap((_response) => {
-            return next(req);
-          })
-        );
+      if (shouldAttemptTokenRefresh(error)) {
+        return authService.refreshToken().pipe(switchMap(() => next(req)));
       }
 
-      // Handle client-side errors
-      if (error.error instanceof ErrorEvent) {
-        console.error('Client-side error:', error.error.message);
-        errorMessage = error.error.message;
-        notificationStore.notify(errorMessage, NotificationType.ERROR);
-      } else {
-        // Handle server-side errors
-        const errorMessageArray = Object.values(errorResponse.detail || {});
-
-        notificationStore.notify(errorMessageArray, NotificationType.ERROR);
-      }
-      // Return the error to be handled by the component or other interceptors
-      return throwError(() => error);
+      // Handle client-side and server-side errors
+      return handleOtherErrors(error, notificationStore);
     })
   );
 };
+
+function handleNetworkError(
+  error: HttpErrorResponse,
+  notificationStore = inject(NotificationStore)
+) {
+  console.error('Network error or backend is down:', error.message);
+  notificationStore.notify(
+    'Cannot reach the server. Please check your internet connection or try again later.',
+    NotificationType.ERROR
+  );
+  return throwError(() => error);
+}
+
+function handleSessionExpiration(
+  notificationStore = inject(NotificationStore),
+  authService = inject(AuthService)
+) {
+  notificationStore.notify('Your session has expired', NotificationType.ERROR);
+  authService.currentUser.set(null);
+  localStorage.removeItem('accessToken');
+  return of(); // error thrown here
+}
+
+function shouldAttemptTokenRefresh(error: HttpErrorResponse) {
+  const isUnauthorized = error.status === 401;
+  const isForbiddenUserEndpoint =
+    error.status === 403 && error.url?.includes('/user');
+  const isNotAuthEndpoint = !['/login', '/logout', '/refresh-token'].some(
+    (url) => error.url?.includes(url)
+  );
+
+  return (isUnauthorized && isNotAuthEndpoint) || isForbiddenUserEndpoint;
+}
+
+function handleOtherErrors(
+  error: HttpErrorResponse,
+  notificationStore = inject(NotificationStore)
+) {
+  if (error.error instanceof ErrorEvent) {
+    console.error('Client-side error:', error.error.message);
+    notificationStore.notify(
+      'An unexpected error occurred.',
+      NotificationType.ERROR
+    );
+  } else {
+    const errorResponse = error.error as ErrorResponse;
+    const errorMessageArray = Object.values(errorResponse.detail || {});
+    notificationStore.notify(errorMessageArray, NotificationType.ERROR);
+  }
+  return throwError(() => error);
+}

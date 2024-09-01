@@ -1,4 +1,5 @@
-<div id="outside" class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0"
+<div id="outside" (click)="toggleModalOutsideClick($event)"
+      class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0"
       [ngClass]="{'parent-fade-in':!closingModal(), 'parent-fade-out':closingModal()}">
       <div id="modalDiv" class="relative overflow-scroll w-full max-w-4xl bg-slate-100 rounded-lg md:max-h-[470px]"
             [ngClass]="{'fade-in':!closingModal(), 'fade-out':closingModal()}">

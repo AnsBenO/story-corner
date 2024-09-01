@@ -34,12 +34,18 @@ export class CartComponent {
   router = inject(Router);
   destroy = inject(DestroyRef);
   notificationStore = inject(NotificationStore);
-
-  xMarkIcon = faXmark;
   plusIcon = faPlus;
   minusIcon = faMinus;
   closingCart: WritableSignal<boolean> = signal(false);
+  xMarkIcon = faXmark;
 
+  toggleCartOutsideClick($event: MouseEvent) {
+    const CartDiv = document.querySelector('#cartDiv');
+    const targetElement = $event.target as HTMLElement;
+    if (!CartDiv?.contains(targetElement)) {
+      this.closeCart();
+    }
+  }
   closeCart() {
     this.closingCart.set(true);
     setTimeout(() => {
@@ -73,21 +79,6 @@ export class CartComponent {
         'Your cart is empty',
         NotificationType.INFO
       );
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:touchstart', ['$event'])
-  handleOutsideClick(event: Event) {
-    const cartDiv = document.querySelector('#cartDiv');
-    const outside = document.querySelector('#outside');
-
-    if (
-      cartDiv &&
-      !cartDiv.contains(event.target as Node) &&
-      outside?.contains(event.target as Node)
-    ) {
-      this.closeCart();
     }
   }
 }

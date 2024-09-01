@@ -31,6 +31,13 @@ export class BookDetailComponent {
   closingModal: WritableSignal<boolean> = signal(false);
   xMark = faXmark;
 
+  toggleModalOutsideClick($event: MouseEvent) {
+    const modalDiv = document.querySelector('#modalDiv');
+    const targetElement = $event.target as HTMLElement;
+    if (!modalDiv?.contains(targetElement)) {
+      this.closeModal();
+    }
+  }
   closeModal() {
     this.closingModal.set(true);
     setTimeout(() => {
@@ -41,19 +48,5 @@ export class BookDetailComponent {
 
   addToCart(book: Book) {
     this.onAddToCart.emit(book);
-  }
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:touchstart', ['$event'])
-  handleOutsideClick(event: Event) {
-    const modalDiv = document.querySelector('#modalDiv');
-    const outside = document.querySelector('#outside');
-
-    if (
-      modalDiv &&
-      !modalDiv.contains(event.target as Node) &&
-      outside?.contains(event.target as Node)
-    ) {
-      this.closeModal();
-    }
   }
 }

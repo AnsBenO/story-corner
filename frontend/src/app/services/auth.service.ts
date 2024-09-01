@@ -2,7 +2,15 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { CurrentUser } from '../types/current-user.type';
 import { LoginPayload } from '../types/login-payload.type';
 import { HttpClient } from '@angular/common/http';
-import { catchError, firstValueFrom, Observable, of, take, tap } from 'rxjs';
+import {
+  catchError,
+  filter,
+  firstValueFrom,
+  Observable,
+  of,
+  take,
+  tap,
+} from 'rxjs';
 import { AuthResponse } from '../types/auth-response.type';
 import { environment } from '../../environments/environment';
 import { RegisterPayload } from '../types/register-payload';
@@ -10,19 +18,26 @@ import { AuthTokenPayload } from '../types/auth-token-payload.type';
 import { NotificationStore } from '../store/notification.store';
 import { Router } from '@angular/router';
 import { LogoutResponse } from '../types/logout-response.type';
+import { InboxService } from './inbox.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { InboxStore } from '../store/inbox.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  currentUser: WritableSignal<CurrentUser | null | undefined> =
-    signal(undefined);
-
   http = inject(HttpClient);
+
+  inboxService = inject(InboxService);
+
+  inboxStore = inject(InboxStore);
 
   router = inject(Router);
   notificationStore = inject(NotificationStore);
 
+  currentUser: WritableSignal<CurrentUser | null | undefined> =
+    signal(undefined);
+  user$ = toObservable(this.currentUser);
   private refreshTokenTimeout!: ReturnType<typeof setTimeout>;
 
   initializeUser(): Promise<unknown> {
@@ -32,7 +47,18 @@ export class AuthService {
     return Promise.resolve();
   }
 
-  constructor() {}
+  constructor() {
+    this.user$
+      .pipe(
+        filter((user) => user !== null && user !== undefined),
+        take(1)
+      )
+      .subscribe((user) => {
+        user && this.inboxService.initSocketConnection(user.username);
+        this.inboxStore.getNewNotifications();
+        this.inboxStore.getNotifications({});
+      });
+  }
   login(formData: LoginPayload): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.API_URL}/auth/login`, formData, {
@@ -95,8 +121,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.setAccessToken(response.accessToken);
-          this.startRefreshTimer();
           this.currentUser.set(response.user);
+          this.startRefreshTimer();
         })
       );
   }
@@ -132,7 +158,6 @@ export class AuthService {
     return this.http.get<CurrentUser>(`${environment.API_URL}/auth/user`).pipe(
       tap((response) => {
         this.currentUser.set(response);
-
         this.startRefreshTimer();
       })
     );

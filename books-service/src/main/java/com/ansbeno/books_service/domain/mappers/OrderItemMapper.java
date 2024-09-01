@@ -1,7 +1,7 @@
 package com.ansbeno.books_service.domain.mappers;
 
 import com.ansbeno.books_service.domain.order.OrderEntity;
-import com.ansbeno.books_service.domain.orderitem.OrderItem;
+import com.ansbeno.books_service.domain.orderitem.OrderItemEntity;
 import com.ansbeno.books_service.domain.dto.OrderItemDTO;
 
 public class OrderItemMapper {
@@ -9,9 +9,9 @@ public class OrderItemMapper {
       OrderItemMapper() {
       }
 
-      public static OrderItem mapToOrderItemEntity(OrderItemDTO orderItem, OrderEntity newOrder) {
+      public static OrderItemEntity mapToOrderItemEntity(OrderItemDTO orderItem, OrderEntity newOrder) {
 
-            return OrderItem.builder()
+            return OrderItemEntity.builder()
                         .code(orderItem.code())
                         .name(orderItem.name())
                         .price(orderItem.price())
@@ -20,7 +20,7 @@ public class OrderItemMapper {
 
       }
 
-      public static OrderItemDTO mapToOrderItemDTO(OrderItem orderItem) {
+      public static OrderItemDTO mapToOrderItemDTO(OrderItemEntity orderItem) {
 
             return OrderItemDTO.builder()
                         .code(orderItem.getCode())

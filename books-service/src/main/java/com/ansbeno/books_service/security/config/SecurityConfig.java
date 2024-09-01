@@ -26,12 +26,21 @@ import lombok.RequiredArgsConstructor;
 class SecurityConfig {
       private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+      private static final String[] WHITELIST = {
+                  "/v3/api-docs",
+                  "/swagger-resources",
+                  "/swagger-resources/**",
+                  "/configuration/ui",
+                  "/configuration/security",
+                  "/swagger-ui.html",
+                  "/swagger-ui/**"
+      };
+
       @Bean
       SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                         .csrf(AbstractHttpConfigurer::disable)
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        // .authenticationProvider(authenticationProvider())
                         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                         .authorizeHttpRequests(
                                     authConfig -> {
@@ -43,12 +52,20 @@ class SecurityConfig {
                                           authConfig.requestMatchers("/error").permitAll();
                                           authConfig.requestMatchers(HttpMethod.GET, "/api/books", "/api/books/*")
                                                       .permitAll();
+                                          authConfig.requestMatchers(WHITELIST).permitAll();
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/books")
                                                       .hasAnyAuthority(Permission.SAVE_ONE_PRODUCT.name());
                                           authConfig.requestMatchers(HttpMethod.POST, "/api/orders")
                                                       .hasAnyAuthority(Permission.SUBMIT_ONE_ORDER.name());
                                           authConfig.requestMatchers(HttpMethod.GET, "/api/orders", "/api/orders/*")
                                                       .hasAnyAuthority(Permission.READ_ORDERS.name());
+                                          authConfig.requestMatchers(HttpMethod.PUT, "/api/notifications/read")
+                                                      .authenticated();
+                                          authConfig.requestMatchers(HttpMethod.GET, "/api/notifications",
+                                                      "/api/notification/*")
+                                                      .authenticated();
+                                          authConfig.requestMatchers("/inbox-socket/**")
+                                                      .permitAll();
                                           authConfig.anyRequest().denyAll();
                                     });
 

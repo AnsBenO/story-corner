@@ -1,5 +1,6 @@
 <div id="outside" class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0"
-      [ngClass]="{'parent-fade-in':!closingCart(), 'parent-fade-out':closingCart()}">
+      [ngClass]="{'parent-fade-in':!closingCart(), 'parent-fade-out':closingCart()}"
+      (click)="toggleCartOutsideClick($event)">
       <div id="cartDiv" class="relative overflow-scroll w-full max-w-4xl bg-slate-100 rounded-lg shadow-lg max-h-full"
             [ngClass]="{'fade-in':!closingCart(), 'fade-out':closingCart()}">
             <fa-icon id="closeCart" [icon]="xMarkIcon"
@@ -9,7 +10,7 @@
                   class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 overflow-y-auto min-h-96 max-h-[calc(100vh-3rem)]">
 
                   <!-- Cart Items Section -->
-                  <div class="w-full md:w-2/3 bg-slate-200 p-4 overflow-scroll relative">
+                  <div class="w-full md:w-2/3 bg-slate-200 p-4 overflow-scroll relative flex-1">
                         <div class="flex justify-between">
                               <h2 class="text-xl md:text-2xl font-semibold mb-4">
                                     Shopping Cart
@@ -70,7 +71,7 @@
                         </ul>
                   </div>
                   <!-- Order Summary Section -->
-                  <div class="w-full md:w-5/12 lg:pr-4 bg-slate-100 p-2 flex flex-col justify-between md:max-w-md">
+                  <div class="basis-1/3 md:w-5/12 lg:pr-4 bg-slate-100 p-2 flex flex-col justify-between md:max-w-md">
                         <h2 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6">Order Summary</h2>
 
                         <div class="mb-4 md:mb-6 flex-1">
@@ -79,7 +80,7 @@
                                     <span class="font-medium">{{cartStore.itemsCount()}}</span>
                               </div>
 
-                              <div>
+                              <div class="flex-1 overflow-scroll">
                                     @for (item of cartStore.items(); track item.code) {
                                     <div class="flex justify-between mb-2 text-xs md:text-sm text-cool-gray">
                                           <span>{{item.name}} ({{item.quantity}}) </span>
@@ -87,6 +88,7 @@
                                                 currency}}</span>
                                     </div>
                                     }
+
                               </div>
                         </div>
 

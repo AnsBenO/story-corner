@@ -1,0 +1,41 @@
+<div id="outside" class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0 z-50 "
+      (click)="toggleInboxOutsideClick($event)"
+      [ngClass]="{'parent-fade-in':!closingInbox(), 'parent-fade-out':closingInbox()}">
+      <!-- INBOX DIV -->
+      <div id="inboxDiv" class="relative overflow-scroll w-full max-w-xl bg-slate-200 rounded-lg shadow-lg max-h-full"
+            [ngClass]="{'fade-in':!closingInbox(), 'fade-out':closingInbox()}">
+            <fa-icon id="closeCart" [icon]="xMarkIcon"
+                  class="absolute top-0.5 right-2 z-50 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"
+                  (click)="closeInbox()" />
+            <div class="px-6 py-6 border-b border-cool-gray-light flex items-center justify-between">
+                  <h2 class="text-xl font-semibold text-night">Inbox ({{inboxStore.notReadCount()}})</h2>
+            </div>
+
+            <!-- Inbox Content -->
+
+            <div class="max-h-96 overflow-scroll">
+                  @if(inboxStore.data().length === 0){
+                  <p class="text-cool-gray-dark p-6">Your inbox is currently empty.</p>
+                  }@else {
+                  @for(notification of inboxStore.data(); track notification.id){
+                  <div [ngClass]="{
+                            'bg-slate-100 text-black font-bold border-slate-200': !notification.read,
+                            'bg-slate-200 text-slate-600 border-slate-200': notification.read
+                        }"
+                        class="flex items-center p-4 border-t border-slate-50 hover:bg-slate-100 transition-colors duration-200 ease-in-out cursor-pointer">
+                        <div class="flex-1">
+                              {{ notification.message }}
+                        </div>
+                  </div>
+                  }
+                  }
+
+            </div>
+
+            <!-- Footer -->
+            <div class="px-6 py-4 border-t border-cool-gray-light flex items-center justify-center">
+                  <button class="text-maya-blue hover:text-maya-blue-dark font-medium text-center"
+                        (click)="loadMore()">loadMore</button>
+            </div>
+      </div>
+</div>

@@ -5,7 +5,7 @@ CREATE TABLE orders
 (
     id                        BIGINT DEFAULT NEXTVAL('order_id_seq') NOT NULL,
     order_number              text NOT NULL UNIQUE,
-    username                  text NOT NULL,
+    user_id                   BIGINT NOT NULL REFERENCES users (id),
     customer_name             text NOT NULL,
     customer_email            text NOT NULL,
     customer_phone            text NOT NULL,

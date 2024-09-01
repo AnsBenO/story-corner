@@ -17,5 +17,4 @@ public interface OrderService {
 
       OrderDTO findUserOrder(String userName, String orderNumber) throws OrderNotFoundException;
 
-
 }

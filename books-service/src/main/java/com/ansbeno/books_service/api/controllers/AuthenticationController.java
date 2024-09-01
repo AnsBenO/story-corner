@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +62,8 @@ public class AuthenticationController {
       @PostMapping("/logout")
       public ResponseEntity<Map<String, String>> logout(
                   @CookieValue("refreshToken") String refreshToken,
-                  @RequestHeader("Authorization") String accessTokenHeader) {
+                  @RequestHeader("Authorization") String accessTokenHeader,
+                  HttpServletResponse response) {
 
             String accessToken = accessTokenHeader.startsWith("Bearer ")
                         ? accessTokenHeader.split(" ")[1]
@@ -76,12 +76,11 @@ public class AuthenticationController {
             Cookie deleteCookie = createRefreshTokenCookie(null);
             deleteCookie.setMaxAge(0);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Successfully logged out");
-
+            Map<String, String> logoutResponse = new HashMap<>();
+            logoutResponse.put("message", "Successfully logged out");
+            response.addCookie(deleteCookie);
             return ResponseEntity.ok()
-                        .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
-                        .body(response);
+                        .body(logoutResponse);
       }
 
       private Cookie createRefreshTokenCookie(String refreshToken) {

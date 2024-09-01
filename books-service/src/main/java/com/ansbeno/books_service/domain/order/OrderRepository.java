@@ -20,16 +20,21 @@ interface OrderRepository extends JpaRepository<OrderEntity, Long> {
       }
 
       @Query("""
-                        SELECT NEW com.ansbeno.books_service.domain.order.OrderSummary(o.orderNumber, o.status)
-                        FROM OrderEntity o
-                        WHERE o.username = :username
+                  SELECT NEW com.ansbeno.books_service.domain.order.OrderSummary(o.orderNumber,
+                  o.status)
+                  FROM OrderEntity o
+                  JOIN o.user u
+                  WHERE u.username = :username
                   """)
       List<OrderSummary> findByUsername(String username);
 
       @Query("""
-                        SELECT DISTINCT o
-                        FROM OrderEntity o LEFT JOIN FETCH o.items
-                        WHERE o.username = :username AND o.orderNumber = :orderNumber
+                  SELECT DISTINCT o
+                  FROM OrderEntity o
+                  LEFT JOIN FETCH o.items
+                  JOIN o.user u
+                  WHERE u.username = :username
+                  AND o.orderNumber = :orderNumber
                   """)
       Optional<OrderEntity> findByUsernameAndOrderNumber(String username, String orderNumber);
 

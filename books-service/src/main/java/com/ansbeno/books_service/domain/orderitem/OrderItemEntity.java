@@ -26,7 +26,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order_items")
-public class OrderItem {
+public class OrderItemEntity {
 
       @Id
       @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_id_generator")

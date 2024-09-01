@@ -25,11 +25,11 @@
                   </button>
             </li>
             <li class="relative">
-                  <button
+                  <button (click)="openInbox()"
                         class="flex items-center gap-0.5 px-4 py-1 h-full rounded font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors">
                         <fa-icon class="text-xl" [icon]="bellIcon" />
                         <span
-                              class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">0</span>
+                              class="bg-cool-gray-light text-cool-gray-dark rounded-full px-1 py-0 mb-4 text-xs">{{inboxStore.notReadCount()}}</span>
                   </button>
             </li>
             @if(authService.currentUser() === null || authService.currentUser() === undefined){
@@ -70,11 +70,11 @@
                                     </button>
                               </li>
                               <li class="relative">
-                                    <button
+                                    <button (click)="openInbox()"
                                           class="flex items-center px-4 py-2 rounded text-lg font-semibold text-celeste-dark hover:text-night hover:bg-cyan-100 transition-colors w-full justify-between">
-                                          <span>notifications</span>
+                                          <span>inbox</span>
                                           <span
-                                                class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">0</span>
+                                                class="ml-2 bg-cool-gray-light text-cool-gray-dark rounded-full px-2 py-1 text-xs">{{inboxStore.notReadCount()}}</span>
                                     </button>
                               </li>
                         </ul>
@@ -113,4 +113,7 @@
 </nav>
 @if(showCart()){
 <app-cart (onClose)="closeCart()" />
+}
+@if(showInbox()){
+<app-inbox (onClose)="closeInbox()" />
 }

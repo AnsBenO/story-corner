@@ -24,11 +24,20 @@ import {
   NotificationStore,
   NotificationType,
 } from '../../../store/notification.store';
+import { InboxComponent } from '../../inbox/inbox.component';
+import { InboxService } from '../../../services/inbox.service';
+import { InboxStore } from '../../../store/inbox.store';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, CartComponent, FontAwesomeModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    CartComponent,
+    InboxComponent,
+    FontAwesomeModule,
+  ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 
@@ -36,12 +45,16 @@ import {
 })
 export class NavigationComponent {
   cartStore = inject(CartStore);
+  inboxService = inject(InboxService);
   authService = inject(AuthService);
   destroy = inject(DestroyRef);
   router = inject(Router);
   notificationStore = inject(NotificationStore);
+  inboxStore = inject(InboxStore);
   showCart: WritableSignal<boolean> = signal(false);
+  showInbox: WritableSignal<boolean> = signal(false);
   isMenuOpen: WritableSignal<boolean> = signal(false);
+
   menuIcon = faBars;
   xMarkIcon = faXmark;
   cartIcon = faCartShopping;
@@ -66,16 +79,19 @@ export class NavigationComponent {
   closeCart() {
     this.showCart.set(false);
   }
+  openInbox() {
+    this.showInbox.set(true);
+  }
+
+  closeInbox() {
+    this.showInbox.set(false);
+  }
 
   logout() {
     this.authService
       .logout()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((response) => {
-        this.notificationStore.notify(
-          'You are logged out',
-          NotificationType.INFO
-        );
         this.router.navigate(['/']);
         this.notificationStore.notify(
           response.message,

@@ -24,7 +24,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 @Component({
   selector: 'app-notification',
@@ -71,22 +71,22 @@ export class NotificationComponent implements OnInit {
     this.notification$
       .pipe(
         takeUntilDestroyed(this.destroy),
+        filter((notification) => {
+          return notification.message !== null && notification.type !== null;
+        }),
         tap((notification) => {
-          if (notification.message) {
-            const id = this.nextId++;
-            const newNotification: TNotification = {
-              id,
-              message: notification.message,
-              type: notification.type,
-            };
-            this.notifications.set([...this.notifications(), newNotification]);
-
-            setTimeout(() => {
-              this.notifications.set(
-                this.notifications().filter((n) => n.id !== id)
-              );
-            }, 5000);
-          }
+          const id = this.nextId++;
+          const newNotification: TNotification = {
+            id,
+            message: notification.message,
+            type: notification.type,
+          };
+          this.notifications.set([...this.notifications(), newNotification]);
+          setTimeout(() => {
+            this.notifications.set(
+              this.notifications().filter((n) => n.id !== id)
+            );
+          }, 5000);
         })
       )
       .subscribe();

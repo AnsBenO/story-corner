@@ -3,7 +3,8 @@ package com.ansbeno.books_service.domain.order;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.ansbeno.books_service.domain.orderitem.OrderItem;
+import com.ansbeno.books_service.domain.orderitem.OrderItemEntity;
+import com.ansbeno.books_service.domain.user.UserEntity;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
@@ -16,6 +17,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -41,11 +44,12 @@ public class OrderEntity {
       @Column(nullable = false, unique = true)
       private String orderNumber;
 
-      @Column(name = "username", nullable = false)
-      private String username;
+      @ManyToOne(optional = false)
+      @JoinColumn(name = "user_id")
+      private UserEntity user;
 
       @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-      private Set<OrderItem> items;
+      private Set<OrderItemEntity> items;
 
       @Embedded
       @AttributeOverrides(value = {
