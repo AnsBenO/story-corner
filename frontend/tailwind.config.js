@@ -2,6 +2,11 @@
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
+    fontFamily: {
+      Merriweather: ['"Merriweather Sans"', "sans-serif"],
+      Suse: ['"SUSE"', "sans-serif"],
+      Montserrat: ["Montserrat", "sans-serif"],
+    },
     extend: {
       colors: {
         celeste: {

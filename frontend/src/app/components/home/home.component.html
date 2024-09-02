@@ -47,6 +47,6 @@
       </div>
 </div>
 
-@if (selectedBook) {
-<app-book-detail [book]="selectedBook" (onAddToCart)="addToCart($event)" (onClose)="closeModal()" />
+@if (selectedBook(); as book) {
+<app-book-detail [book]="book" (onAddToCart)="addToCart($event)" (onClose)="closeModal()" />
 }

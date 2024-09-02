@@ -51,27 +51,29 @@ public class NotificationServiceImpl implements NotificationService {
             String messageString;
             switch (orderStatus) {
                   case NEW: {
-                        messageString = "Your order has been placed and is awaiting processing.";
+                        messageString = order.getOrderNumber()
+                                    + " Your order has been placed and is awaiting processing.";
                         break;
                   }
                   case IN_PROCESS: {
-                        messageString = "Your order is being processed.";
+                        messageString = order.getOrderNumber() + " Your order is being processed.";
                         break;
                   }
                   case DELIVERY_IN_PROGRESS: {
-                        messageString = "Your order is on its way!";
+                        messageString = order.getOrderNumber() + " Your order is on its way!";
                         break;
                   }
                   case DELIVERED: {
-                        messageString = "Your order has been delivered.";
+                        messageString = order.getOrderNumber() + " Your order has been delivered.";
                         break;
                   }
                   case CANCELLED: {
-                        messageString = "Your order has been cancelled.";
+                        messageString = order.getOrderNumber() + " Your order has been cancelled.";
                         break;
                   }
                   case ERROR: {
-                        messageString = "There was an issue with your order. Please contact support.";
+                        messageString = order.getOrderNumber()
+                                    + " There was an issue with your order. Please contact support.";
                         break;
                   }
                   default: {

@@ -10,6 +10,7 @@ import {
   of,
   take,
   tap,
+  throwError,
 } from 'rxjs';
 import { AuthResponse } from '../types/auth-response.type';
 import { environment } from '../../environments/environment';
@@ -161,6 +162,12 @@ export class AuthService {
       tap((response) => {
         this.currentUser.set(response);
         this.startRefreshTimer();
+      }),
+      catchError((error) => {
+        localStorage.removeItem('accessToken');
+        console.error('Failed to load user:', error);
+        this.currentUser.set(undefined);
+        return throwError(() => error);
       })
     );
   }

@@ -16,47 +16,57 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       // Handle network errors
-      if (error.status === 0) {
-        return handleNetworkError(error, notificationStore);
+      if (error.status === 0 || error.status === null) {
+        notificationStore.notify(
+          'Cannot reach the server. Please check your internet connection or try again later.',
+          NotificationType.ERROR
+        );
+        return throwError(() => error);
       }
 
       // Handle session expiration
       if (error.url?.includes('/refresh-token')) {
-        return handleSessionExpiration(notificationStore, authService);
+        notificationStore.notify(
+          'Your session has expired',
+          NotificationType.ERROR
+        );
+        authService.currentUser.set(null);
+        localStorage.removeItem('accessToken');
+        return of();
       }
 
       // Retry with refreshed token if applicable
       if (shouldAttemptTokenRefresh(error)) {
-        return authService.refreshToken().pipe(switchMap(() => next(req)));
+        return authService.refreshToken().pipe(
+          switchMap(() => next(req)),
+          catchError((refreshError) => {
+            console.error('Token refresh failed:', refreshError.message);
+            return handleOtherErrors(refreshError);
+          })
+        );
+      }
+
+      function handleOtherErrors(error: HttpErrorResponse) {
+        if (error.error instanceof ErrorEvent) {
+          console.error('Client-side error:', error.error.message);
+          notificationStore.notify(
+            'An unexpected error occurred.',
+            NotificationType.ERROR
+          );
+        } else {
+          console.error('Server-side error:', error);
+          const errorResponse = error.error as ErrorResponse;
+          const errorMessageArray = Object.values(errorResponse.detail || {});
+          notificationStore.notify(errorMessageArray, NotificationType.ERROR);
+        }
+        return throwError(() => error);
       }
 
       // Handle client-side and server-side errors
-      return handleOtherErrors(error, notificationStore);
+      return handleOtherErrors(error);
     })
   );
 };
-
-function handleNetworkError(
-  error: HttpErrorResponse,
-  notificationStore = inject(NotificationStore)
-) {
-  console.error('Network error or backend is down:', error.message);
-  notificationStore.notify(
-    'Cannot reach the server. Please check your internet connection or try again later.',
-    NotificationType.ERROR
-  );
-  return throwError(() => error);
-}
-
-function handleSessionExpiration(
-  notificationStore = inject(NotificationStore),
-  authService = inject(AuthService)
-) {
-  notificationStore.notify('Your session has expired', NotificationType.ERROR);
-  authService.currentUser.set(null);
-  localStorage.removeItem('accessToken');
-  return of(); // error thrown here
-}
 
 function shouldAttemptTokenRefresh(error: HttpErrorResponse) {
   const isUnauthorized = error.status === 401;
@@ -67,22 +77,4 @@ function shouldAttemptTokenRefresh(error: HttpErrorResponse) {
   );
 
   return (isUnauthorized && isNotAuthEndpoint) || isForbiddenUserEndpoint;
-}
-
-function handleOtherErrors(
-  error: HttpErrorResponse,
-  notificationStore = inject(NotificationStore)
-) {
-  if (error.error instanceof ErrorEvent) {
-    console.error('Client-side error:', error.error.message);
-    notificationStore.notify(
-      'An unexpected error occurred.',
-      NotificationType.ERROR
-    );
-  } else {
-    const errorResponse = error.error as ErrorResponse;
-    const errorMessageArray = Object.values(errorResponse.detail || {});
-    notificationStore.notify(errorMessageArray, NotificationType.ERROR);
-  }
-  return throwError(() => error);
 }

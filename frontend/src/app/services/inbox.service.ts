@@ -20,7 +20,7 @@ export class InboxService {
   private http = inject(HttpClient);
 
   initSocketConnection(username: string) {
-    const url = '//localhost:8081/inbox-socket';
+    const url = environment.INBOX_SOCKET;
     const socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, () => {

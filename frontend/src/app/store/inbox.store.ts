@@ -2,7 +2,6 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
@@ -12,7 +11,6 @@ import { InboxService } from '../services/inbox.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 import { of, pipe, switchMap, take, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
 
 const initialState: NotificationsPage = {
   data: [],

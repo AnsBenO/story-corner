@@ -1,7 +1,7 @@
 import {
   APP_INITIALIZER,
   ApplicationConfig,
-  provideZoneChangeDetection,
+  provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { AuthService } from './services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([httpErrorInterceptor, authInterceptor])
@@ -21,7 +21,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: (authService: AuthService) => async () => {
-        await authService.initializeUser();
+        try {
+          await authService.initializeUser();
+        } catch (error) {
+          console.error(error);
+        }
       },
       deps: [AuthService],
       multi: true,

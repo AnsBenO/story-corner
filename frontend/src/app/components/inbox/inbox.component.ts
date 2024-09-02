@@ -5,7 +5,6 @@ import {
   EventEmitter,
   inject,
   OnDestroy,
-  OnInit,
   Output,
   signal,
   WritableSignal,

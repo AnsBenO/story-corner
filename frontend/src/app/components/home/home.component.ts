@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   });
 
   showBookDetailModal: WritableSignal<boolean> = signal(false);
-  selectedBook: Book | null = null;
+  selectedBook: WritableSignal<Book | null> = signal(null);
 
   ngOnInit(): void {
     this.fetchBooks(1);
@@ -62,13 +62,13 @@ export class HomeComponent implements OnInit {
   }
 
   openModal(book: Book) {
-    this.selectedBook = book;
+    this.selectedBook.set(book);
     this.showBookDetailModal.set(true);
   }
 
   closeModal() {
     this.showBookDetailModal.set(false);
-    this.selectedBook = null;
+    this.selectedBook.set(null);
   }
 
   loadMore() {

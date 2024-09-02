@@ -64,9 +64,7 @@ export class CheckoutComponent implements OnInit {
       items.forEach((i) => {
         delete i.imageUrl;
       });
-      items.forEach((i) => {
-        delete i.imageUrl;
-      });
+
       const customer: Customer = {
         username: currentUser.username,
         email: currentUser.email,
@@ -84,7 +82,7 @@ export class CheckoutComponent implements OnInit {
           .subscribe({
             next: (response) => {
               console.log(response);
-              
+
               this.router.navigateByUrl('/');
               this.notificationStore.notify(
                 `order created successfully`,
