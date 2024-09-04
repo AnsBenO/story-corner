@@ -58,6 +58,7 @@ export class AuthService {
       )
       .subscribe((user) => {
         this.inboxService.initSocketConnection(user.username);
+        // these two return subscriptions
         this.inboxStore.getNewNotifications();
         this.inboxStore.getNotifications({});
       });

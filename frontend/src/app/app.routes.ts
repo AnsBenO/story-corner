@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./components/home/home.component').then((m) => m.HomeComponent),
-    data: { title: 'book store - Home' },
+    title: 'book store - Home',
   },
   {
     path: 'login',
@@ -20,7 +20,7 @@ export const routes: Routes = [
       import('./components/auth/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    data: { title: 'login' },
+    title: 'book store - login',
     canActivate: [authGuard],
   },
   {
@@ -29,7 +29,7 @@ export const routes: Routes = [
       import('./components/auth/signup/signup.component').then(
         (m) => m.SignupComponent
       ),
-    data: { title: 'signup' },
+    title: 'book store - signup',
     canActivate: [authGuard],
   },
   {
@@ -38,6 +38,7 @@ export const routes: Routes = [
       import('./components/checkout/checkout.component').then(
         (m) => m.CheckoutComponent
       ),
+    title: 'book store - checkout',
     canActivate: [checkoutGuard],
   },
   {
@@ -46,5 +47,6 @@ export const routes: Routes = [
       import('./components/common/not-found/not-found.component').then(
         (m) => m.NotFoundComponent
       ),
+    title: 'book store - 404 Not Found',
   },
 ];
