@@ -65,7 +65,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
             var payload = """
                     {
                         "customer": {
-                            "username": "Hello_Geoe",
+                            "username": "testuser",
                             "email": "ans@email.com",
                             "phone": "0999999993"
                         },

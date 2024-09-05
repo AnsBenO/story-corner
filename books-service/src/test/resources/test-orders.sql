@@ -50,3 +50,5 @@ INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 (1, 'P101', 'To Kill a Mockingbird', 45.40, 1),
 (2, 'P102', 'The Chronicles of Narnia', 44.50, 1)
 ;
+
+

@@ -1,0 +1,2 @@
+DELETE FROM tokens;
+DELETE FROM users;

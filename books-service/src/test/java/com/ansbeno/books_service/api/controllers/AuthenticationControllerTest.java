@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 
 import com.ansbeno.books_service.AbstractIntegrationTest;
 import com.ansbeno.books_service.domain.user.Role;
@@ -24,6 +25,7 @@ import com.ansbeno.books_service.security.authentication.RegisterUserDto;
 
 import io.restassured.http.ContentType;
 
+@Sql("/test-auth.sql")
 public class AuthenticationControllerTest extends AbstractIntegrationTest {
 
         @Autowired
