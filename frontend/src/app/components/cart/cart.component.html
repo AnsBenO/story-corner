@@ -1,8 +1,14 @@
-<div id="outside" class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0"
-      [ngClass]="{'parent-fade-in':!closingCart(), 'parent-fade-out':closingCart()}"
+@let isClosingCart = closingCart();
+<!-- style for parent div -->
+@let parentStyle = {'parent-fade-in':!isClosingCart, 'parent-fade-out':isClosingCart};
+<!-- style for the modal div -->
+@let cartDivStyle = {'fade-in':!isClosingCart, 'fade-out':isClosingCart};
+
+
+<div id="outside" class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0" [ngClass]="parentStyle"
       (click)="toggleCartOutsideClick($event)">
       <div id="cartDiv" class="relative overflow-scroll w-full max-w-4xl bg-slate-100 rounded-lg shadow-lg max-h-full"
-            [ngClass]="{'fade-in':!closingCart(), 'fade-out':closingCart()}">
+            [ngClass]="cartDivStyle">
             <fa-icon id="closeCart" [icon]="xMarkIcon"
                   class="absolute top-0 right-2 z-50 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"
                   (click)="closeCart()" />

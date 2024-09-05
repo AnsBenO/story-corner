@@ -1,8 +1,13 @@
+@let isClosingModal = closingModal();
+<!-- style for parent div -->
+@let parentStyle = {'parent-fade-in':!isClosingModal, 'parent-fade-out':isClosingModal};
+<!-- style for the modal div -->
+@let modalDivStyle = {'fade-in':!isClosingModal, 'fade-out':isClosingModal};
+
 <div id="outside" (click)="toggleModalOutsideClick($event)"
-      class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0"
-      [ngClass]="{'parent-fade-in':!closingModal(), 'parent-fade-out':closingModal()}">
+      class="fixed inset-0 flex items-center justify-center px-4 py-6 sm:px-0" [ngClass]="parentStyle">
       <div id="modalDiv" class="relative overflow-scroll w-full max-w-4xl bg-slate-100 rounded-lg md:max-h-[470px]"
-            [ngClass]="{'fade-in':!closingModal(), 'fade-out':closingModal()}">
+            [ngClass]="modalDivStyle">
             <fa-icon id="closeModal" [icon]="xMark"
                   class="absolute top-0 right-2 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"
                   (click)="closeModal()" />

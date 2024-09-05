@@ -11,9 +11,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders: {
         Authorization: accessToken ? `Bearer ${accessToken}` : '',
       },
-      withCredentials: true,
     });
   }
 
+  req = req.clone({
+    withCredentials: true,
+  });
   return next(req);
 };

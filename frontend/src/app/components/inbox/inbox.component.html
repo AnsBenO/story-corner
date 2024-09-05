@@ -1,10 +1,16 @@
+@let isClosingInbox = closingInbox();
+<!-- style for parent div -->
+@let parentStyle = {'parent-fade-in':!isClosingInbox, 'parent-fade-out':isClosingInbox};
+<!-- style for the modal div -->
+@let inboxDivStyle = {'fade-in':!isClosingInbox, 'fade-out':isClosingInbox};
+
+
 <div id="outside" class="fixed inset-0 flex items-center justify-center px-2 py-6 sm:px-0 z-50 "
-      (click)="toggleInboxOutsideClick($event)"
-      [ngClass]="{'parent-fade-in':!closingInbox(), 'parent-fade-out':closingInbox()}">
+      (click)="toggleInboxOutsideClick($event)" [ngClass]="parentStyle">
       <!-- INBOX DIV -->
       <div id="inboxDiv" class="relative overflow-scroll w-full max-w-xl bg-slate-200 rounded-lg shadow-lg max-h-full"
-            [ngClass]="{'fade-in':!closingInbox(), 'fade-out':closingInbox()}">
-            <fa-icon id="closeCart" [icon]="xMarkIcon"
+            [ngClass]="inboxDivStyle">
+            <fa-icon [icon]="xMarkIcon"
                   class="absolute top-0.5 right-2 z-50 cursor-pointer text-2xl font-bold text-cool-gray hover:text-cool-gray-dark transition"
                   (click)="closeInbox()" />
             <div class="px-6 py-6 border-b border-cool-gray-light flex items-center justify-between">
@@ -14,10 +20,11 @@
             <!-- Inbox Content -->
 
             <div class="max-h-96 overflow-scroll">
-                  @if(inboxStore.data().length === 0){
+                  @let inboxData = inboxStore.data();
+                  @if(inboxData.length === 0){
                   <p class="text-cool-gray-dark p-6">Your inbox is currently empty.</p>
                   }@else {
-                  @for(notification of inboxStore.data(); track notification.id){
+                  @for(notification of inboxData; track notification.id){
                   <div [ngClass]="{
                             'bg-slate-100 text-black font-bold border-slate-200': !notification.read,
                             'bg-slate-200 text-slate-600 border-slate-200': notification.read

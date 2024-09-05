@@ -107,13 +107,7 @@ export class AuthService {
 
   refreshToken(): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(
-        `${environment.API_URL}/auth/refresh-token`,
-        {},
-        {
-          withCredentials: true,
-        }
-      )
+      .post<AuthResponse>(`${environment.API_URL}/auth/refresh-token`, {})
       .pipe(
         tap((response) => {
           this.setAccessToken(response.accessToken);
