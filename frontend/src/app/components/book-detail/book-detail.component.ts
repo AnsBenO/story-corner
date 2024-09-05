@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   HostListener,
@@ -21,7 +20,6 @@ import { CartStore } from '../../store/cart.store';
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookDetailComponent {
   @Input() book!: Book;

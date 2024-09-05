@@ -42,6 +42,11 @@ export const routes: Routes = [
     canActivate: [checkoutGuard],
   },
   {
+    path: 'admin',
+    loadChildren: () =>
+      import('./components/admin/admin.module').then((m) => m.AdminModule),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./components/common/not-found/not-found.component').then(

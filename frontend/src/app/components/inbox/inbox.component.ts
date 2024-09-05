@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   inject,
@@ -19,7 +18,6 @@ import { AuthService } from '../../services/auth.service';
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './inbox.component.html',
   styleUrl: './inbox.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InboxComponent implements OnDestroy {
   @Output() onClose = new EventEmitter<void>();

@@ -1,12 +1,13 @@
-package com.ansbeno.books_service.domain.book;
+package com.ansbeno.books_service.domain.mappers;
 
+import com.ansbeno.books_service.domain.book.BookEntity;
 import com.ansbeno.books_service.domain.dto.BookDto;
 
-class BookMapper {
+public class BookMapper {
       private BookMapper() {
       }
 
-      static BookEntity mapToBookEntity(BookDto book) {
+      public static BookEntity mapToBookEntity(BookDto book) {
             if (book == null) {
                   return null;
             }
@@ -22,7 +23,7 @@ class BookMapper {
                         .build();
       }
 
-      static BookDto mapToBookDto(BookEntity book) {
+      public static BookDto mapToBookDto(BookEntity book) {
             if (book == null) {
                   return null;
             }

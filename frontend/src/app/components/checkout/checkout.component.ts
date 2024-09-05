@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { OrderService } from '../../services/order.service';
@@ -26,7 +20,6 @@ import { Router, RouterModule } from '@angular/router';
   imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, RouterModule],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutComponent implements OnInit {
   ngOnInit(): void {

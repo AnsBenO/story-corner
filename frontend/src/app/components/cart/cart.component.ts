@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   EventEmitter,
@@ -26,7 +25,6 @@ import {
   imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartComponent {
   @Output() onClose = new EventEmitter<void>();

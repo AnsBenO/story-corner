@@ -2,7 +2,6 @@ package com.ansbeno.books_service.security.authentication;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import com.ansbeno.books_service.security.exceptions.InvalidTokenException;
@@ -48,8 +47,7 @@ public class AuthenticationService {
             // generate tokens
             String accessToken = jwtService.generateAccessToken(user, generateExtraClaims(user));
             String refreshToken = jwtService.generateRefreshToken(user, generateExtraClaims(user));
-            // revoke old tokens
-            revokeOldTokens(user);
+
             // save tokens
             saveToTokenRepository(refreshToken, user, TokenType.REFRESH_TOKEN);
             saveToTokenRepository(accessToken, user, TokenType.ACCESS_TOKEN);
@@ -70,16 +68,6 @@ public class AuthenticationService {
             extraClaims.put("jti", UUID.randomUUID().toString());
             return extraClaims;
 
-      }
-
-      private void revokeOldTokens(UserEntity user) {
-            Set<TokenEntity> userTokens = tokenRepository.findByUser(user);
-            if (!userTokens.isEmpty()) {
-                  userTokens.forEach(tokenEntity -> {
-                        tokenEntity.setRevoked(true);
-                        tokenRepository.save(tokenEntity);
-                  });
-            }
       }
 
       public AuthenticationDto register(RegisterUserDto request) {

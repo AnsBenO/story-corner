@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-} from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,7 +32,6 @@ import { RegisterPayload } from '../../../types/register-payload';
   ],
   templateUrl: './signup.component.html',
   styleUrl: '../auth.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupComponent {
   fb = inject(FormBuilder);

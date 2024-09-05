@@ -65,9 +65,7 @@ export class AuthService {
   }
   login(formData: LoginPayload): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${environment.API_URL}/auth/login`, formData, {
-        withCredentials: true,
-      })
+      .post<AuthResponse>(`${environment.API_URL}/auth/login`, formData)
       .pipe(
         tap((response) => {
           this.setAccessToken(response.accessToken);
@@ -79,9 +77,7 @@ export class AuthService {
 
   register(formData: RegisterPayload): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${environment.API_URL}/auth/register`, formData, {
-        withCredentials: true,
-      })
+      .post<AuthResponse>(`${environment.API_URL}/auth/register`, formData)
       .pipe(
         tap((response) => {
           this.setAccessToken(response.accessToken);
@@ -93,11 +89,7 @@ export class AuthService {
 
   logout(): Observable<LogoutResponse> {
     return this.http
-      .post<LogoutResponse>(
-        `${environment.API_URL}/auth/logout`,
-        {},
-        { withCredentials: true }
-      )
+      .post<LogoutResponse>(`${environment.API_URL}/auth/logout`, {})
       .pipe(
         tap((_response) => {
           this.currentUser.set(null);

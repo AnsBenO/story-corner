@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   HostListener,
@@ -40,8 +39,6 @@ import { InboxStore } from '../../../store/inbox.store';
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
-
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavigationComponent {
   cartStore = inject(CartStore);

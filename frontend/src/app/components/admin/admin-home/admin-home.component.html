@@ -1,0 +1,90 @@
+<div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-gray-900 p-5 text-white flex flex-col space-y-6">
+            <a href="#" class="text-3xl font-bold mb-6">Admin Panel</a>
+            <nav class="flex flex-col space-y-4">
+                  <a href="#" class="hover:bg-gray-700 p-3 rounded text-lg">Dashboard</a>
+                  <a href="#" class="hover:bg-gray-700 p-3 rounded text-lg">Users</a>
+                  <a href="#" class="hover:bg-gray-700 p-3 rounded text-lg">Orders</a>
+                  <a href="#" class="hover:bg-gray-700 p-3 rounded text-lg">Settings</a>
+            </nav>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-celeste-dark text-night-dark p-6 flex justify-between items-center shadow-md">
+                  <h1 class="text-4xl font-bold">Dashboard</h1>
+                  <div class="flex items-center space-x-6">
+                        <span class="font-semibold">Admin</span>
+                        <button class="bg-cool-gray hover:bg-cool-gray-dark p-3 rounded text-white">Logout</button>
+                  </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="flex-1 bg-gray-100 p-8">
+                  <!-- Stats Grid -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Total Sales Revenue -->
+                        <div class="bg-white p-6 rounded shadow-lg border-t-4 border-blue-500">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Total Sales Revenue</h3>
+                              <p class="text-3xl font-bold text-gray-900">$100,000</p>
+                        </div>
+
+                        <!-- Number of Orders -->
+                        <div class="bg-white p-6 rounded shadow-lg border-t-4 border-green-500">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Number of Orders</h3>
+                              <p class="text-3xl font-bold text-gray-900">1,200</p>
+                        </div>
+
+                        <!-- Active Users -->
+                        <div class="bg-white p-6 rounded shadow-lg border-t-4 border-yellow-500">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Active Users</h3>
+                              <p class="text-3xl font-bold text-gray-900">350</p>
+                        </div>
+
+                        <!-- Best-Selling Books -->
+                        <div
+                              class="bg-white p-6 rounded shadow-lg border-t-4 border-indigo-500 col-span-1 md:col-span-2 lg:col-span-1">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Best-Selling Books</h3>
+                              <ul class="list-disc list-inside text-gray-700">
+                                    <li>Book 1 - 500 units</li>
+                                    <li>Book 2 - 450 units</li>
+                                    <li>Book 3 - 300 units</li>
+                              </ul>
+                        </div>
+
+                        <!-- Orders by Status -->
+                        <div
+                              class="bg-white p-6 rounded shadow-lg border-t-4 border-purple-500 col-span-1 md:col-span-2">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Orders by Status</h3>
+                              <div class="flex flex-wrap">
+                                    <div class="w-1/2 md:w-1/4 p-2">
+                                          <p class="text-lg text-gray-900">NEW: 100</p>
+                                    </div>
+                                    <div class="w-1/2 md:w-1/4 p-2">
+                                          <p class="text-lg text-gray-900">In Process: 50</p>
+                                    </div>
+                                    <div class="w-1/2 md:w-1/4 p-2">
+                                          <p class="text-lg text-gray-900">Delivered: 900</p>
+                                    </div>
+                                    <div class="w-1/2 md:w-1/4 p-2">
+                                          <p class="text-lg text-gray-900">Cancelled: 150</p>
+                                    </div>
+                              </div>
+                        </div>
+
+                        <!-- Sales by Country -->
+                        <div
+                              class="bg-white p-6 rounded shadow-lg border-t-4 border-red-500 col-span-1 md:col-span-2 lg:col-span-1">
+                              <h3 class="text-xl font-semibold text-gray-800 mb-3">Sales by Country</h3>
+                              <ul class="list-disc list-inside text-gray-700">
+                                    <li>USA: $50,000</li>
+                                    <li>UK: $30,000</li>
+                                    <li>Canada: $20,000</li>
+                              </ul>
+                        </div>
+                  </div>
+            </main>
+      </div>
+</div>

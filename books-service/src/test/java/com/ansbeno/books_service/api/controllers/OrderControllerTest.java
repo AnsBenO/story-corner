@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
@@ -94,6 +95,7 @@ public class OrderControllerTest extends AbstractIntegrationTest {
                     .then()
                     .statusCode(HttpStatus.CREATED.value())
                     .body("orderNumber", notNullValue());
+
         }
 
         @ParameterizedTest(name = "[{index}]-{0}")

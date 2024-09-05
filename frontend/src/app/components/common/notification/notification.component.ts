@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   OnInit,
@@ -32,7 +31,6 @@ import { filter, tap } from 'rxjs';
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationComponent implements OnInit {
   notificationStore = inject(NotificationStore);

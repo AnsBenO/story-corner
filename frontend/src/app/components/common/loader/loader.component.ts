@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   inject,
@@ -24,7 +23,6 @@ import {
   imports: [CommonModule, RouterModule],
   templateUrl: './loader.component.html',
   styleUrl: './loader.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoaderComponent implements OnInit {
   router = inject(Router);
