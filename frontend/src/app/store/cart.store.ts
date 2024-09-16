@@ -96,6 +96,7 @@ export const CartStore = signalStore(
         localStorage.setItem('cartItems', JSON.stringify(updatedItems));
       },
       checkout() {
+        // waiting for the animation (cart fade out) before navigating to checkout
         setTimeout(() => {
           router.navigate(['/checkout']);
         }, 500);

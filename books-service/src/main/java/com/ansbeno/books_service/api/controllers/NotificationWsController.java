@@ -15,7 +15,7 @@ public class NotificationWsController {
       @MessageMapping("/order-status")
       @SendTo("/topic/notifications")
       public NotificationDTO sendNotification(NotificationDTO notification) {
-            // Logic to send notification
+            // TODO Logic to send notification
             return notification;
       }
 }

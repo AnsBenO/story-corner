@@ -7,4 +7,6 @@ import { AdminHomeComponent } from './admin-home/admin-home.component';
   declarations: [AdminHomeComponent],
   imports: [CommonModule, AdminRoutingModule],
 })
-export class AdminModule {}
+export class AdminModule {
+  // TODO ADMIN pages
+}

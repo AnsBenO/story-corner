@@ -28,6 +28,7 @@ export const NotificationStore = signalStore(
       } else {
         message.forEach((msg, index) => {
           const notification: TNotification = { message: msg, type };
+          // setting a timeout for more appealing animation. waits for the previous
           setTimeout(() => patchState(store, { notification }), 500 * index);
         });
       }

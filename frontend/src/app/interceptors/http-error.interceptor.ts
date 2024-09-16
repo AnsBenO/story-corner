@@ -66,15 +66,14 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       return handleOtherErrors(error);
     })
   );
+  function shouldAttemptTokenRefresh(error: HttpErrorResponse) {
+    const isUnauthorized = error.status === 401;
+    const isForbiddenUserEndpoint =
+      error.status === 403 && error.url?.includes('/user');
+    const isNotAuthEndpoint = !['/login', '/logout', '/refresh-token'].some(
+      (url) => error.url?.includes(url)
+    );
+
+    return (isUnauthorized && isNotAuthEndpoint) || isForbiddenUserEndpoint;
+  }
 };
-
-function shouldAttemptTokenRefresh(error: HttpErrorResponse) {
-  const isUnauthorized = error.status === 401;
-  const isForbiddenUserEndpoint =
-    error.status === 403 && error.url?.includes('/user');
-  const isNotAuthEndpoint = !['/login', '/logout', '/refresh-token'].some(
-    (url) => error.url?.includes(url)
-  );
-
-  return (isUnauthorized && isNotAuthEndpoint) || isForbiddenUserEndpoint;
-}

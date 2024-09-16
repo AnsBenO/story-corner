@@ -42,6 +42,7 @@ export const routes: Routes = [
     canActivate: [checkoutGuard],
   },
   {
+    // TODO ADMIN pages
     path: 'admin',
     loadChildren: () =>
       import('./components/admin/admin.module').then((m) => m.AdminModule),

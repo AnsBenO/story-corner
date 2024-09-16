@@ -10,7 +10,7 @@ import { computed, inject } from '@angular/core';
 import { InboxService } from '../services/inbox.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
-import { of, pipe, switchMap, take, throwError } from 'rxjs';
+import { of, pipe, switchMap, throwError } from 'rxjs';
 
 const initialState: NotificationsPage = {
   data: [],
@@ -34,7 +34,6 @@ export const InboxStore = signalStore(
       pipe(
         switchMap((payload) =>
           inboxService.getAllNotifications(payload.page).pipe(
-            take(1),
             tapResponse({
               next: (pageData) => {
                 const updatedNotifications = [
