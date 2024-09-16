@@ -38,7 +38,7 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
 
 -   **Angular 18**: Latest Angular version.
 -   **Tailwind CSS**: For utility-first CSS styling.
--   **NGRX/Signals**: Managing global state, specifically for notifications and cart functionality.
+-   **NGRX/Signals**: Managing global state.
 
 ### Key Features
 
@@ -55,7 +55,7 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
     -   **Inbox**: Users are notified about the state of the orders they submitted.
     -   **Cart Management**: Users can add books to their cart before authentication. Cart state is preserved across different parts of the application.
 -   **Order real time updates using websocket**:
-    -   **Inbox Notifications**: Using sockjs and stompjs libraries users are subscibed to a web socket that notifies the client to the order status after processing.
+    -   **Inbox Notifications**: Using sockjs and stompjs libraries users are subscribed to a web socket that notifies the client to the order status after processing.
 -   **JWT Refresh Token Mechanism**:
     -   Reading expiration dates from JWT access tokens and setting a timeout for refreshing the access token.
     -   Sending refresh token requests using HTTP-only cookie.
@@ -78,8 +78,8 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
         -   Tokens are revoked upon logout.
         -   Refresh tokens have a usage limit (3 times) to prevent abuse.
 -   **Order status notification using websocket**:
-    -   Notifying the user about the status of thier orders after processing.
--   **Error Handeling with a Global Controller Adviser**
+    -   Notifying the user about the status of their orders after processing.
+-   **Error Handling with a Global Controller Adviser**
     -   Ensure that the error responses are consistent and well defined for easier integration with the frontend.
 
 ### Security
