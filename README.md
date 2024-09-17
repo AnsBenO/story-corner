@@ -79,7 +79,7 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
         -   Refresh tokens have a usage limit (3 times) to prevent abuse.
 -   **Order status notification using websocket**:
     -   Notifying the user about the status of their orders after processing.
--   **Error Handling with a Global Controller Adviser**
+-   **Error Handling with a Global Error handler **
     -   Ensure that the error responses are consistent and well defined for easier integration with the frontend.
 
 ### Security
