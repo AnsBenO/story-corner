@@ -13,7 +13,7 @@ import com.ansbeno.books_service.domain.dto.CreateOrderRequestDTO;
 import com.ansbeno.books_service.domain.dto.OrderItemDTO;
 
 public class TestDataFactory {
-      static final List<String> VALID_COUNTIES = List.of("India", "Germany");
+      static final List<String> VALID_COUNTIES = List.of("USA", "GERMANY", "UK");
       static final Set<OrderItemDTO> VALID_ORDER_ITEMS = Set
                   .of(new OrderItemDTO("P100", "Product 1", new BigDecimal("25.50"), 1));
       static final Set<OrderItemDTO> INVALID_ORDER_ITEMS = Set
