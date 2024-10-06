@@ -1,5 +1,5 @@
-DELETE FROM order_items; 
-DELETE FROM orders;      
+DELETE FROM order_items;
+DELETE FROM orders;
 DELETE FROM tokens;
 DELETE FROM notifications;
 DELETE FROM users;
@@ -48,7 +48,4 @@ INSERT INTO orders (
 INSERT INTO order_items(order_id, code, name, price, quantity) VALUES
 (1, 'P100', 'The Hunger Games', 34.0, 2),
 (1, 'P101', 'To Kill a Mockingbird', 45.40, 1),
-(2, 'P102', 'The Chronicles of Narnia', 44.50, 1)
-;
-
-
+(2, 'P102', 'The Chronicles of Narnia', 44.50, 1);
