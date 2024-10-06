@@ -1,3 +1,8 @@
+DELETE FROM order_items; 
+DELETE FROM orders;      
+DELETE FROM tokens;
+DELETE FROM notifications;
+DELETE FROM users;
 DELETE FROM books;
 INSERT INTO books(code, name, description, image_url, price) VALUES
       ('P100','The Hunger Games','Winning will make you famous. Losing means certain death...','https://images.gr-assets.com/books/1447303603l/2767052.jpg', 34.0),
