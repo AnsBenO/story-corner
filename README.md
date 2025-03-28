@@ -91,7 +91,7 @@ Story Corner is a full-stack web application for browsing and purchasing books. 
 
 -   Integration tests using test containers and restassured.
 
-## CI Workflow
+## CI/CD Workflow
 
 ### Containerization
 
